@@ -1,0 +1,126 @@
+.signin {
+    background-color: var(--first-color);
+    width: 100%;
+    height: 100vh;
+}
+
+.boxs {
+    display: flex;
+    width: 70rem;
+    margin: auto;
+    padding: 13rem 0;
+    align-items: center;
+    overflow: hidden;
+    /* flex-wrap: wrap-reverse; */
+}
+
+.box .img {
+    overflow: hidden;
+    transition: 1s ease-in;
+    border-radius: 30px 0px 0px 30px;
+}
+
+.box .img:hover img {
+    transform: scale(1.02);
+}
+
+.box .lock-box {
+    width: 4rem;
+    height: 4rem;
+    background-color: var(--footer-link-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: .6rem;
+    margin: auto;
+}
+
+.boxs .box:last-child {
+    padding: 4.6rem 2rem 3rem 2rem;
+    background-color: var(--bg-white);
+    border-top-right-radius: 3rem;
+    border-bottom-right-radius: 3rem;
+    width: 50%;
+}
+
+.box .lock {
+    text-align: center;
+}
+
+.box .lock h1 {
+    margin-top: .7rems;
+    font-size: var(--24-font-size);
+    font-weight: var(--font-medium);
+    line-height: var(--32-line-height);
+    color: var(--first-color);
+    font-family: var(--roboto-font);
+    letter-spacing: .1rem;
+}
+
+form label {
+    font-size: var(--11-font-size);
+    font-weight: var(--font-regular);
+    line-height: var(--18-line-height);
+    color: #000000DE;
+    font-family: var(--nunito-font);
+    cursor: pointer;
+}
+
+form input {
+    width: calc(100% - 1.5rem);
+    height: 2.9rem;
+    padding-left: 1rem;
+    margin-top: .8rem;
+    margin-bottom: .611rem;
+    outline: none;
+    border: .1rem solid #CED4DA;
+    border-radius: .32rem;
+}
+
+form input:focus {
+    border-color: #A1CBEF;
+    box-shadow: 0px 0px 2px rgba(52, 144, 220, 0.25);
+}
+
+form #btn {
+    background-color: var(--first-color);
+    color: var(--bg-white);
+    font-size: var(--14-font-size);
+    font-weight: var(--font-regular);
+    line-height: var(--24-line-height);
+    margin-top: 1.7889rem;
+    font-family: var(--roboto-font);
+    margin-bottom: 1.7rem;
+}
+
+form #link {
+    font-family: var(--roboto-font);
+    font-size: var(--14-font-size);
+    font-weight: var(--font-regular);
+    line-height: var(--24-line-height);
+}
+
+@media screen and (max-width :1040px) {
+    .boxs {
+        width: 80%;
+    }
+    .box .lock img{
+        width: 50%;
+    }
+}
+
+@media screen and (max-width :640px) {
+    .boxs .box:first-child {
+        display: none;
+    }
+
+    .boxs {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .boxs .box:last-child {
+        width: 100%;
+        border-radius: 0
+    }
+}

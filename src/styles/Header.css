@@ -1,0 +1,18 @@
+.hamburger {
+    padding: 0;
+}
+
+.hamburger--collapse {
+    background-color: white;
+}
+
+.hamburger-box {
+    background-color: white;
+}
+
+.hamburger-inner,
+.hamburger-inner:after,
+.hamburger-inner:before {
+    background-color: #C4C4C4;
+
+}

@@ -1,0 +1,35 @@
+p {
+    padding: 1.5rem 0;
+    font-family: var(--quicksand-font);
+    font-size: var(--16-font-size);
+    font-weight: var(--font-regular);
+    line-height: var(--20-line-height);
+    color: #000000;
+    text-align: center;
+}
+
+p span {
+    font-size: var(--16-font-size);
+    font-weight: var(--font-semibold);
+    line-height: var(--20-line-height);
+    color: #3F51B5;
+}
+@media screen and (max-width :640px) {
+    p {
+
+        font-size: var(--11-font-size);
+
+    }
+
+    p span {
+        font-size: var(--11-font-size);
+
+    }
+}
+footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+}

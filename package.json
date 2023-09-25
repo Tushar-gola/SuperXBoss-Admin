@@ -1,15 +1,47 @@
 {
-  "name": "my-app",
+  "name": "admin",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^4.5.8",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/lab": "^5.0.0-alpha.143",
+    "@mui/material": "^5.13.1",
+    "@mui/x-date-pickers": "^6.13.0",
+    "@mui/x-date-pickers-pro": "^6.13.0",
+    "@react-spring/web": "^9.7.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.4.0",
+    "formik": "^2.4.2",
+    "hamburgers": "^1.2.1",
+    "lottie-react": "^2.4.0",
+    "moment": "^2.29.4",
+    "notistack": "^3.0.1",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
+    "react-fontawesome": "^1.7.1",
+    "react-images-uploading": "^3.1.7",
+    "react-lazy-load-image-component": "^1.6.0",
+    "react-loader-spinner": "^5.3.4",
+    "react-location": "^3.3.4",
+    "react-redux": "^8.1.1",
+    "react-router-dom": "^6.11.2",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "react-select": "^5.7.3",
+    "redux": "^4.2.1",
+    "rsuite": "^5.39.0",
+    "swiper": "^10.0.4",
+    "web-vitals": "^2.1.4",
+    "yup": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,5 +66,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage": "."
 }

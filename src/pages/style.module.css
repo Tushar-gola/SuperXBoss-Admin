@@ -1,0 +1,42 @@
+.style {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50rem;
+    background-color: white;
+}
+
+
+.style2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* opacity: 0; */
+    transform: translate(-50%, -50%);
+    width: 90rem;
+    background-color: white;
+    overflow: scroll;
+    max-height: 600px;
+    transition: 1s ease-in-out;
+}
+
+.style3 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100rem;
+    overflow: scroll;
+    max-height: 700px;
+    background-color: white;
+}
+
+
+.style3::-webkit-scrollbar {
+    display: none;
+}
+
+.style2::-webkit-scrollbar {
+    display: none;
+}

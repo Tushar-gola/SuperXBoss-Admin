@@ -1,0 +1,46 @@
+
+#Navslider{
+    position: absolute;
+    left: -100%;
+    top: 0;
+    padding: 2.8rem 1.5rem 20rem 1.5rem;
+    width: 25rem;
+    background-color: white;
+    z-index: 10;
+    /* background-color: red; */
+    transition: 5s ease-in-out;
+  }
+  #header-active{
+    position: absolute;
+    left: 0%;
+    top: 0;
+    padding: 2.8rem 1.5rem 20rem 1.5rem;
+    width: 25rem;
+    background-color: white;
+    z-index: 10;
+    /* background-color: red; */
+    transition:.5s ease-in-out;
+  }
+.logo{
+    margin-bottom: 3.4rem;
+    display: flex;
+  }
+ .nav-list li img{
+    margin-right: 2rem;
+  }
+  .nav-list li {
+    padding: .5rem 0;
+    margin-bottom: .5rem;
+  }
+  .nav-list li .link{
+    display: flex;
+    align-items: center;
+  }
+  .nav-list li span{
+    font-family: var(--roboto-font);
+     font-size: var(--14-font-size);
+    font-weight: var(--font-regular);
+    line-height: var(--24-line-height);
+    color: #000000;
+    text-transform: uppercase;
+  }
