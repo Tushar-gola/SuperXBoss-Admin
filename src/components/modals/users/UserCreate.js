@@ -11,7 +11,8 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import SendIcon from '@mui/icons-material/Send';
 
-export default function UserCreate({ editModalOpen, closeEditModal, id, userEditData, reload, setReload }) {
+export default function UserCreate({ editModalOpen, closeEditModal, id, userEditData, reload, setReload, setEditUserData }) {
+    console.log(userEditData, "lllllllllllll");
     const [open, setOpen] = useState(false);
     const [role, setRole] = useState('');
     const [roleName, setRoleName] = useState([])
@@ -24,6 +25,7 @@ export default function UserCreate({ editModalOpen, closeEditModal, id, userEdit
         setOpen(false)
         closeEditModal()
         setValues({ password: "!@#$%^&*" })
+        setEditUserData(false)
     }
 
     const handleChangeRole = (event) => {
@@ -58,7 +60,9 @@ export default function UserCreate({ editModalOpen, closeEditModal, id, userEdit
                 password: "!@#$%^&*",
             },
             onSubmit: async (values) => {
+                console.log(values, "mmmmmmmmmmmm");
                 dispatch(openLoader(true));
+                values.role = role;
                 let AxiosFetch
                 if (userEditData) {
                     AxiosFetch = await AxiosFetchMethod(
@@ -218,7 +222,7 @@ export default function UserCreate({ editModalOpen, closeEditModal, id, userEdit
                                         name="password"
                                         placeholder="password"
                                         onChange={handleChange}
-                                        onBl ur={handleBlur}
+                                        onBlur={handleBlur}
                                         value={values.password}
                                         disabled={userEditData ? true : false}
                                     />
@@ -226,7 +230,7 @@ export default function UserCreate({ editModalOpen, closeEditModal, id, userEdit
                                         {eyeToggle ? <RemoveRedEyeIcon fontSize="large" /> : <VisibilityOffIcon fontSize="large" />}
                                     </div>
                                 </div>
-                                
+
 
                             </Grid>
 

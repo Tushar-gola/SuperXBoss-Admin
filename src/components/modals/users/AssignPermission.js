@@ -48,7 +48,6 @@ export default function AssignPermission({ modalOpen, modalClose, id }) {
             setChecked(prev => prev.filter(p => p !== id))
         }
     }
-
     const assignCheckedRetrieve = async () => {
         try {
             let { data } = await RetrieveData({
@@ -56,7 +55,8 @@ export default function AssignPermission({ modalOpen, modalClose, id }) {
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/user-permission-retrieve?user_id=${id}`,
                 headers: { Authorization: brToken }
             });
-            setChecked(JSON.parse(data?.permission_id).length > 0 ? JSON.parse(data?.permission_id) : [])
+            let permissionIdsArray = data.map(item => +item?.permission_id);
+            setChecked(permissionIdsArray.length > 0 ? permissionIdsArray : [])
         } catch (e) {
             console.log(e.message);
         }
@@ -108,7 +108,6 @@ export default function AssignPermission({ modalOpen, modalClose, id }) {
 
                                     <Grid item xs={12} ><h1>{item?.heading}</h1></Grid>
                                     {item?.permission?.map(({ name, id }, index) => {
-                                        console.log(id);
                                         return (
                                             <Grid item xs={3} key={index} >
                                                 <FormGroup >

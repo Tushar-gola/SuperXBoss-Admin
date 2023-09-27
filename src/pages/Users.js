@@ -203,7 +203,7 @@ export default function Users() {
       <Box sx={{ flexGrow: 1, px: "2.8rem" }}>
         <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
           <Grid item xs={4}>
-            <UserCreate editModalOpen={editModalOpen} closeEditModal={() => setEditModalOpen(false)} id={userId} userEditData={editUserData} reload={reload} setReload={setReload} />
+            <UserCreate editModalOpen={editModalOpen} closeEditModal={() => setEditModalOpen(false)} id={userId} userEditData={editUserData} reload={reload} setReload={setReload} setEditUserData={setEditUserData} />
           </Grid>
         </Grid>
       </Box>
@@ -220,7 +220,7 @@ export default function Users() {
         />
       )}
 
-      <AssignPermission modalOpen={assignPermission} modalClose={() => { setAssignPermission(false) }} id={userId} />
+      <AssignPermission modalOpen={assignPermission} modalClose={() => { setAssignPermission(false); setEditUserData(false) }} id={userId} />
     </>
   );
 }

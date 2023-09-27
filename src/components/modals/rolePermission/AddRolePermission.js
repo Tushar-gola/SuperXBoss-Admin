@@ -57,13 +57,12 @@ export default function AddRolePermission({ modalOpen, modalClose, RoleData }) {
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/role-permission-retrieve?role_id=${RoleData?.id}`,
                 headers: { Authorization: brToken }
             });
-            console.log(data.permission_id.length);
-            setChecked(data.permission_id.length > 0 ? JSON.parse(data?.permission_id) : [])
+            let permissionIdsArray = data.map(item => +item?.permission_id);
+            setChecked(permissionIdsArray.length > 0 ? permissionIdsArray : [])
         } catch (e) {
             console.log(e?.message);
         }
     }
-
     const { handleBlur, handleSubmit, handleChange, values, setValues } =
         useFormik({
             initialValues: {
@@ -88,6 +87,7 @@ export default function AddRolePermission({ modalOpen, modalClose, RoleData }) {
                 }
             },
         });
+
     return (
         <>
             <Modal
@@ -132,6 +132,7 @@ export default function AddRolePermission({ modalOpen, modalClose, RoleData }) {
                                     sx={{ fontSize: "1.4rem" }}
                                 >
                                     {permission.length > 0 ? permission?.map((item, index) => {
+                                        console.log(permission, "llllllllllll")
                                         return (
                                             <Grid container spacing={1} sx={{ padding: "1.5rem 3rem", width: "500px", }} key={index}>
                                                 <Grid item xs={12} ><h1>{item?.heading}</h1></Grid>

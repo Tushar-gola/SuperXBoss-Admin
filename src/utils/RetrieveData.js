@@ -10,8 +10,9 @@ const RetrieveData = (options) => {
         if (error?.response?.status == 401) {
             <Navigate to="/signIn" />
             localStorage.clear()
+            window.location.reload();
         }
-    
+
         console.log(error?.response?.data, "hgghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
         return error
     });
