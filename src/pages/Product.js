@@ -56,9 +56,6 @@ export default function Product() {
             label: "Catagries",
             onClick: () => { setOpenCategoryModal(true) }
         },
-        {
-            label: "SubCatagries"
-        },
 
     ];
 
@@ -70,20 +67,29 @@ export default function Product() {
         setAnchorEl(null);
     };
     const getData = async (value) => {
-        dispatch(openLoader(true));
+        try {
+            dispatch(openLoader(true));
 
-        let { data } = await RetrieveData({
-            method: "get",
-            url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-product-panel`,
-            headers: { Authorization: brToken },
-            params: { page, limit: rowsPerPage, value: value[0] }
-        });
-        if (data) {
+            const response = await RetrieveData({
+                method: "get",
+                url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-product-panel`,
+                headers: { Authorization: brToken },
+                params: { page, limit: rowsPerPage, value: value[0] }
+            });
+
+            const { data } = response;
+
+            if (data) {
+                dispatch(openLoader(false));
+                setProductData(data.rows);
+                setTotalPages(data.rows?.length);
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
             dispatch(openLoader(false));
-            setProductData(data?.rows);
-            setTotalPages(data.rows?.length)
         }
-    }
+    };
+
 
     const debounce = (func, time) => {
         let Timer;
@@ -120,7 +126,8 @@ export default function Product() {
         {
             id: "segment", label: "Vehicle Segments", renderCell: (parms) => {
                 return (parms?.segment?.name)
-            } },
+            }
+        },
 
         {
             id: "trend_part", label: "Trend", renderCell: (parms) => {
@@ -128,7 +135,9 @@ export default function Product() {
                     <StarBorderIcon
                         sx={{ fontSize: 30 }}
                         className={`featured-${parms?.trend_part}`}
-                        onClick={() => pagePost(parms?.id, parms?.trend_part)}
+                        onClick={() =>
+                            updateProductTrendStatus(parms?.id, { trend_part: parms?.trend_part })
+                        }
                     />
                 );
             },
@@ -138,7 +147,9 @@ export default function Product() {
                     <StarBorderIcon
                         sx={{ fontSize: 30 }}
                         className={`featured-${parms?.new_arrival}`}
-                        onClick={() => pagePostArrival(parms?.id, parms?.new_arrival)}
+                        onClick={() =>
+                            updateProductTrendStatus(parms?.id, { new_arrival: parms?.new_arrival })
+                        }
                     />
                 );
             },
@@ -148,7 +159,9 @@ export default function Product() {
                     <StarBorderIcon
                         sx={{ fontSize: 30 }}
                         className={`featured-${parms?.pop_item}`}
-                        onClick={() => pagePostPopItem(parms?.id, parms?.pop_item)}
+                        onClick={() =>
+                            updateProductTrendStatus(parms?.id, { pop_item: parms?.pop_item })
+                        }
                     />
                 );
             },
@@ -173,13 +186,6 @@ export default function Product() {
             renderCell: (parms) => {
                 return (
                     <React.Fragment>
-                        {/* <Tooltip title="Delete">
-                            <IconButton style={{ padding: 5 }}>
-                                <DeleteIcon fontSize='large' sx={{ color: "#000000" }} />
-                            </IconButton>
-                        </Tooltip> */}
-
-
                         <Tooltip title="Edit">
                             <IconButton onClick={() => { setVehicleEdit(parms); setVehicleEditModalOpen(true) }}>
                                 <BorderColorIcon fontSize='large' sx={{ color: "#000000" }}
@@ -209,7 +215,7 @@ export default function Product() {
                             onClose={handleClose}
                             PaperProps={{
                                 style: {
-                                    minHeight: ITEM_HEIGHT * 4.5,
+                                    minHeight: ITEM_HEIGHT * 2.5,
                                     width: '20rem',
                                     border: "1px dotted grey",
                                     boxShadow: "none"
@@ -237,61 +243,54 @@ export default function Product() {
     }
 
     const productRetrieve = async () => {
-        dispatch(openLoader(true));
-        let { data } = await RetrieveData({
-            method: "get",
-            url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/product-retrieve`,
-            headers: { Authorization: brToken },
-            params: { page, limit: rowsPerPage }
-        });
-        if (data) {
-            dispatch(openLoader(false));
-            setProductData(data?.rows);
-            setTotalPages(data?.count)
-        }
-    }
+        try {
+            dispatch(openLoader(true));
+            const response = await RetrieveData({
+                method: "get",
+                url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/product-retrieve`,
+                headers: { Authorization: brToken },
+                params: { page, limit: rowsPerPage }
+            });
+            const { data } = response;
 
-    const pagePost = async (id, trendId) => {
-        dispatch(openLoader(true));
-        let AxiosFetch = await AxiosFetchMethod({
-            url: `${process.env.REACT_APP_BASE_URL}/api/update/product-trend-status`,
-            method: "put",
-            data: { id: id, trend_part: trendId },
-            headers: { Authorization: brToken },
-        });
-        if (AxiosFetch.type === "success") {
+            if (data) {
+                setProductData(data?.rows);
+                setTotalPages(data?.count);
+            }
+        } finally {
             dispatch(openLoader(false));
-            setReload(!reload);
         }
     };
 
-    const pagePostArrival = async (id, arrival) => {
+
+    const updateProductTrendStatus = async (id, data) => {
         dispatch(openLoader(true));
-        let AxiosFetch = await AxiosFetchMethod({
-            url: `${process.env.REACT_APP_BASE_URL}/api/update/product-trend-status`,
-            method: "put",
-            data: { id: id, new_arrival: arrival },
-            headers: { Authorization: brToken },
-        });
-        if (AxiosFetch.type === "success") {
+        const apiUrl = `${process.env.REACT_APP_BASE_URL}/api/update/product-trend-status`;
+        const requestData = { id, ...data };
+        const headers = { Authorization: brToken };
+
+        try {
+            const AxiosFetch = await AxiosFetchMethod({
+                url: apiUrl,
+                method: "put",
+                data: requestData,
+                headers,
+            });
+
+            if (AxiosFetch.type === "success") {
+                dispatch(openLoader(false));
+                setReload(!reload);
+            } else {
+                dispatch(openLoader(false));
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
             dispatch(openLoader(false));
-            setReload(!reload);
         }
     };
 
-    const pagePostPopItem = async (id, popular_item) => {
-        dispatch(openLoader(true));
-        let AxiosFetch = await AxiosFetchMethod({
-            url: `${process.env.REACT_APP_BASE_URL}/api/update/product-trend-status`,
-            method: "put",
-            data: { id: id, pop_item: popular_item },
-            headers: { Authorization: brToken },
-        });
-        if (AxiosFetch.type === "success") {
-            dispatch(openLoader(false));
-            setReload(!reload);
-        }
-    };
+
+
 
     const brandRetrieve = async () => {
         let { data } = await RetrieveData({
@@ -334,7 +333,7 @@ export default function Product() {
                     <Grid item xs={2}>
                         <SelectSearch debounceGetData={debounceGetData} sparePart={false} segment={true} label="Vehicle Segments" KeyId="segment" />
                     </Grid>
-              
+
                     <Grid item xs={2} >
                         <SelectSearch debounceGetData={debounceGetData} sparePart={false} segment={false} statusCheck={true} label="Trend" KeyId="trend" />
                     </Grid>

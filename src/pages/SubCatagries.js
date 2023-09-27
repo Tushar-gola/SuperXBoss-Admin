@@ -151,6 +151,8 @@ export default function SubCategories() {
         if (AxiosFetch?.type === "success") {
             dispatch(openLoader(false));
             setReload(!reload)
+        } else {
+            dispatch(openLoader(false));
         }
     };
 
@@ -195,7 +197,7 @@ export default function SubCategories() {
                         <SearchField debounceGetData={debounceGetData} label="Find Sub-category using name" keyId="subName" />
                     </Grid>
                     <Grid item xs={2}>
-                        <SelectSearch debounceGetData={debounceGetData} sparePart={false} segment={false} category={true} label="Status" KeyId="subStatus" />
+                        <SelectSearch debounceGetData={debounceGetData} sparePart={false} segment={false} statusCheck={true} label="Status" KeyId="subStatus" />
                     </Grid>
                 </Grid>
             </Box>

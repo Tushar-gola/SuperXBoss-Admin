@@ -170,6 +170,8 @@ export default function Categories() {
         if (AxiosFetch.type === "success") {
             dispatch(openLoader(false));
             setReload(!reload);
+        } else {
+            dispatch(openLoader(false));
         }
     };
 

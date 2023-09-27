@@ -196,6 +196,8 @@ export default function Users() {
       dispatch(openLoader(false));
     } else if (AxiosFetch.type === "error") {
       dispatch(openLoader(false));
+    } else {
+      dispatch(openLoader(false));
     }
   };
   return (

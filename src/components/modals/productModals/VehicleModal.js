@@ -16,7 +16,6 @@ const CustomCheckbox = styled(Checkbox)(({ theme }) => ({
 }));
 
 export default function VehicleModal({ modalOpen, modalClose, data, id, productData }) {
-    console.log(productData?.brand_id);
     const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState([])
     const [personName, setPersonName] = React.useState([]);
