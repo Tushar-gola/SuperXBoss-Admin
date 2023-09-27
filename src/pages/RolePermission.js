@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import AddRolePermission from '../components/modals/rolePermission/AddRolePermission';
+import React, { useState, useEffect } from 'react';
 import { Grid, Box, Tooltip, FormControlLabel, Switch } from '@mui/material';
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import AddRole from '../components/modals/rolePermission/AddRole';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AxiosFetchMethod from "../utils/AxiosInstance";
 import IconButton from '@mui/material/IconButton';
-import RetrieveData from '../utils/RetrieveData';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+
+import AddRole from '../components/modals/rolePermission/AddRole';
+import AddRolePermission from '../components/modals/rolePermission/AddRolePermission';
 import CustomTable from "../helpers/CustomTable";
+
+import AxiosFetchMethod from "../utils/AxiosInstance";
+import RetrieveData from '../utils/RetrieveData';
 import { openLoader } from "../actions/index";
 import { useDispatch } from "react-redux";
+
 
 export default function RolePemission() {
     const [page, setPage] = useState(1);
@@ -23,11 +26,7 @@ export default function RolePemission() {
     let token = localStorage.getItem("token");
     let brToken = `Bearer ${token}`;
     useEffect(() => {
-        try {
-            roleRetrieve()
-        } catch (e) {
-            console.log(e.message, "Role Permission");
-        }
+        roleRetrieve()
     }, [page, rowsPerPage, reload])
 
     const RoleColumns = [
@@ -72,37 +71,53 @@ export default function RolePemission() {
             },
         },
     ];
-
     const handleChangeRowsPerPage = (event) => setRowsPerPage(+event.target.value);
 
     const handleSwitch = async (id, status) => {
-        dispatch(openLoader(true));
-        let data = await AxiosFetchMethod({
-            url: `${process.env.REACT_APP_BASE_URL}/api/update/role-status`,
-            method: "put",
-            data: { id: id, statusId: status },
-            headers: { Authorization: brToken },
-        });
-        if (data) {
+        try {
+            dispatch(openLoader(true));
+            let data = await AxiosFetchMethod({
+                url: `${process.env.REACT_APP_BASE_URL}/api/update/role-status`,
+                method: "put",
+                data: { id: id, statusId: status },
+                headers: { Authorization: brToken },
+            });
+            if (data) {
+                dispatch(openLoader(false));
+                setReload(!reload);
+            } else {
+                console.error("No data in the response.");
+                dispatch(openLoader(false));
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
             dispatch(openLoader(false));
-            setReload(!reload);
         }
     }
     const roleRetrieve = async () => {
-        dispatch(openLoader(true));
-        let { data } = await RetrieveData({
-            method: "get",
-            url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/roles-retrieve`,
-            headers: { Authorization: brToken },
-            params: { page, limit: rowsPerPage }
-        });
-        if (data) {
+        try {
+            dispatch(openLoader(true));
+            const response = await RetrieveData({
+                method: "get",
+                url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/roles-retrieve`,
+                headers: { Authorization: brToken },
+                params: { page, limit: rowsPerPage },
+            });
+
+            const { data } = response;
+
+            if (data) {
+                setRoles(data.rows);
+                setTotalPages(data.count);
+            }
             dispatch(openLoader(false));
-            setRoles(data?.rows)
-            setTotalPages(data?.count);
+        } catch (error) {
+            console.error("An error occurred:", error);
+            dispatch(openLoader(false)); // Make sure to close the loader in case of an error.
         }
-    }
-    
+    };
+
+
     return (
         <>
             <Box sx={{ flexGrow: 1, px: '2.8rem', }}>
