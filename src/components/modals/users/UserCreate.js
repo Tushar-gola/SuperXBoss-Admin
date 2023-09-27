@@ -221,7 +221,8 @@ export default function UserCreate({ editModalOpen, closeEditModal, id, userEdit
                                         type={eyeToggle ? "password" : "type"}
                                         name="password"
                                         placeholder="password"
-                                        onChange={handleChange}
+                                        onChange={handleChange} 
+                                        
                                         onBlur={handleBlur}
                                         value={values.password}
                                         disabled={userEditData ? true : false}
