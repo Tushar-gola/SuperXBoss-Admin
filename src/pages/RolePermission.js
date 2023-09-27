@@ -94,6 +94,7 @@ export default function RolePemission() {
             dispatch(openLoader(false));
         }
     }
+    
     const roleRetrieve = async () => {
         try {
             dispatch(openLoader(true));

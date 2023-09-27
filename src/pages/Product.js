@@ -66,6 +66,7 @@ export default function Product() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    
     const getData = async (value) => {
         try {
             dispatch(openLoader(true));
@@ -90,7 +91,6 @@ export default function Product() {
         }
     };
 
-
     const debounce = (func, time) => {
         let Timer;
         return (...args) => {
@@ -100,6 +100,7 @@ export default function Product() {
             }, time)
         }
     }
+
     const debounceGetData = debounce(getData, 2000);
 
     const productColumns = [
@@ -233,6 +234,7 @@ export default function Product() {
             },
         },
     ];
+
     const getValue = (data, id) => {
         options.find(o => o?.label === data).onClick(data);
         if (data === "Brands") {
@@ -262,7 +264,6 @@ export default function Product() {
         }
     };
 
-
     const updateProductTrendStatus = async (id, data) => {
         dispatch(openLoader(true));
         const apiUrl = `${process.env.REACT_APP_BASE_URL}/api/update/product-trend-status`;
@@ -288,9 +289,6 @@ export default function Product() {
             dispatch(openLoader(false));
         }
     };
-
-
-
 
     const brandRetrieve = async () => {
         let { data } = await RetrieveData({
