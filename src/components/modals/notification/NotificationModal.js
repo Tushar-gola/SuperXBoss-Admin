@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
 import Slide from '@mui/material/Slide';
 import UploadIcon from "../../../images/icons8-upload-to-the-cloud-50.png";
+import MultiSelectUser from "../../MultiSelectUser";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -138,16 +139,7 @@ export default function Notification() {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <label htmlFor="name">Name</label>
-                            <input
-                                type="text"
-                                name="name"
-                                id="name"
-                                // required
-                                placeholder="Name"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                value={values.name} />
+                            <MultiSelectUser />
                         </Grid>
 
                         <Grid item xs={12}>

@@ -312,6 +312,7 @@ export default function Product() {
         <>
             <Box sx={{ flexGrow: 1, px: '2.8rem', }}>
                 <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
+                    
                     <Grid item xs={1.5} >
                         <CreateProduct editData={vehicleEdit} setEditData={setVehicleEdit} editModalOpen={vehicleEditModalOpen} editModalClose={() => setVehicleEditModalOpen(false)} reload={reload} setReload={setReload} />
                     </Grid>
@@ -364,7 +365,6 @@ export default function Product() {
                 id={productId} data={vehicleData} productData={vehicleEdit} />
 
             <CatagoriesModal modalOpen={openCategoryModal} modalClose={() => { setOpenCategoryModal(false) }} />
-
         </>
     )
 }
