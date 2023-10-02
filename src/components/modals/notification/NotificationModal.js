@@ -17,7 +17,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Notification() {
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);;
+    const handleOpen = () => setOpen(true);
+    const [userDataId, setUserDataId] = React.useState([])
     const [notificationImage, setNotificationImage] = useState({
         notification: "",
         Url: ''
@@ -46,17 +47,23 @@ export default function Notification() {
         useFormik({
             initialValues: {
                 title: "",
-                name: "",
+                id: "",
                 description: ""
             },
             onSubmit: async (val̥ues) => {
                 let formData = new FormData();
+                values.id = JSON.stringify(userDataId)
                 for (let data in values) {
-                    console.log(values[data]);
                     formData.append(data, values[data]);
                 }
                 formData.append('image', notificationImage?.notification)
-
+                let data = await AxiosFetchMethod({
+                    url: `${process.env.REACT_APP_BASE_URL}/api/create/notification`,
+                    method: "post",
+                    data: formData,
+                    headers: { Authorization: brToken },
+                });
+                console.log(data);
             },
         });
     return (
@@ -139,7 +146,7 @@ export default function Notification() {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <MultiSelectUser />
+                            <MultiSelectUser userDataId={userDataId} setUserDataId={setUserDataId} />
                         </Grid>
 
                         <Grid item xs={12}>

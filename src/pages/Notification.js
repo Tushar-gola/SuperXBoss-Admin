@@ -21,6 +21,7 @@ export default function Notification() {
     const [reload, setReload] = useState(false);
     const [totalPages, setTotalPages] = useState(null);
     const dispatch = useDispatch();
+    
     const navigate = useNavigate();
     let token = localStorage.getItem("token");
     let brToken = `Bearer ${token}`;
