@@ -49,7 +49,7 @@ export default function Brands() {
         },
         { id: "name", label: 'Name' },
         {
-            id: "featured", label: 'Feartured', renderCell: (parms) => {
+            id: "brand_day", label: 'Brand Day', renderCell: (parms) => {
                 return (
                     <StarBorderIcon
                         sx={{ fontSize: 30 }}
@@ -60,15 +60,16 @@ export default function Brands() {
             },
         },
         { id: "type", label: 'type' },
+        { id: "brand_day_offer", label: 'Brand Day Offer' },
         {
             id: "user_id", label: 'Create By', renderCell: (parms) => {
-                return <div>{parms.user.name}</div>
+                return <div>{parms?.user.name}</div>
 
             }
         },
         {
             id: "createdAt", label: 'Create At', renderCell: (parms) => {
-                return moment(parms.createdAt).format(" MMMM Do YYYY, h:mm A");
+                return moment(parms?.createdAt).format(" MMMM Do YYYY, h:mm A");
             },
         },
         {

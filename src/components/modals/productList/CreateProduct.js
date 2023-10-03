@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Stack, Box, Modal, Button, Grid, Dialog, DialogActions, DialogContent, MenuItem } from '@mui/material';
+import { Stack, Box, Modal, Button, Grid, Dialog, DialogActions, DialogContent, MenuItem, ListItemText, OutlinedInput, InputLabel, FormControl } from '@mui/material';
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import AxiosFetchMethod from "../../../utils/AxiosInstance";
@@ -63,6 +63,7 @@ export default function CreateProduct({ reload, setReload, editModalOpen, editMo
     const [fieldPairs, setFieldPairs] = useState([{ id: 1, item_count: '', bulk_discount: '' }]);
     const [videoDisable, setVideoDisable] = useState(true)
     const [vehicleSegments, setVehicleSegments] = useState()
+    const [segmentName, setSegmentName] = useState([])
     const dispatch = useDispatch();
     const handleOpen = () => { setOpen(true); };
     const handleClose = () => {
@@ -74,6 +75,7 @@ export default function CreateProduct({ reload, setReload, editModalOpen, editMo
         setOldImage([])
         setImages([])
         setSource()
+        setSegmentName([])
     }
     let token = localStorage.getItem("token");
     let brToken = `Bearer ${token}`;
@@ -217,7 +219,7 @@ export default function CreateProduct({ reload, setReload, editModalOpen, editMo
                         formData.append(`new_image`, file);
                     });
                 }
-
+                formData.append("segment", JSON.stringify(segmentName))
                 if (editData) {
                     AxiosFetch = await AxiosFetchMethod({
                         url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-product`,
@@ -285,6 +287,15 @@ export default function CreateProduct({ reload, setReload, editModalOpen, editMo
         });
         setVehicleSegments(data)
     }
+
+    const handleNameGet = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setSegmentName(value)
+
+    }
+    console.log(segmentName, "mmmmmmmm");
     return (
         <>
             <Stack spacing={2} direction="row">
@@ -439,7 +450,7 @@ export default function CreateProduct({ reload, setReload, editModalOpen, editMo
 
                             <Grid item xs={6}>
                                 <label htmlFor="name">Part number</label>
-                                <input type='number' id='part_number' placeholder='Part number' name='part_no' onChange={handleChange} value={values.part_no} onBlur={handleBlur} />
+                                <input type='text' id='part_number' placeholder='Part number' name='part_no' onChange={handleChange} value={values.part_no} onBlur={handleBlur} />
                             </Grid>
 
                             <Grid item xs={6}>
@@ -555,22 +566,26 @@ export default function CreateProduct({ reload, setReload, editModalOpen, editMo
                                 </CustomSelect>
                             </Grid>
                             <Grid item xs={6}>
-                                <label htmlFor="vehicle_type">Vehicle-segment</label>
-                                <CustomSelect
-                                    name="segment_type"
-                                    value={values.segment_type}
-                                    sx={{ fontSize: "1.3rem" }}
-                                    onBlur={handleBlur}
-                                    onChange={handleChange} fullWidth >
-                                    <CustomMenuItem disabled sx={{ fontSize: "1.5rem" }}>---/Select/---</CustomMenuItem>
-                                    {
-                                        vehicleSegments?.map((item, index) => {
-                                            return (
-                                                <CustomMenuItem value={item?.id} key={index} sx={{ fontSize: "1.4rem" }}>{item?.name}</CustomMenuItem>
-                                            )
-                                        })
-                                    }
-                                </CustomSelect>
+                          <label htmlFor="vehicle_type">Vehicle-segment</label> 
+                                <FormControl fullWidth sx={{marginTop:".5rem"}}>
+                                    <InputLabel id="demo-multiple-checkbox-label">Vehicle-segment</InputLabel>
+                                    <Select
+                                        labelId="demo-multiple-checkbox-label"
+                                        id="demo-multiple-checkbox"
+                                        multiple
+                                        value={segmentName}
+                                        onChange={handleNameGet}
+                                        input={<OutlinedInput label="Vehicle-segment" />}
+                                        renderValue={(selected) => selected.join(', ')}
+                                    >
+                                        {vehicleSegments?.map((item, index) => (
+                                            <MenuItem key={index} value={item.name}>
+                                                <Checkbox checked={segmentName.includes(item?.name)} />
+                                                <ListItemText primary={item.name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
 
                         </Grid>
@@ -604,7 +619,7 @@ export default function CreateProduct({ reload, setReload, editModalOpen, editMo
                                         <CustomSelect
                                             name="unit"
                                             value={values.unit}
-                                            sx={{ fontSize: "1.3rem", padding: "0",width:"100px" }}
+                                            sx={{ fontSize: "1.3rem", padding: "0", width: "100px" }}
                                             onBlur={handleBlur}
                                             onChange={handleChange}  >
                                             <CustomMenuItem disabled sx={{ fontSize: "1.5rem" }}>---/Select/---</CustomMenuItem>

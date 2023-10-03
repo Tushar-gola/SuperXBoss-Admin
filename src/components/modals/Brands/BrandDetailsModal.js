@@ -39,7 +39,7 @@ export default function BrandDetailsModal({ setReload, reload, brandEditData, se
             }
         };
         window.addEventListener('keyup', handleKeyPress);
-    }, []); // Empty dependency array means this effect runs only once
+    }, []);
 
     const types = [
         {
@@ -77,7 +77,7 @@ export default function BrandDetailsModal({ setReload, reload, brandEditData, se
         initialValues: {
             name: "",
             description: "",
-            type: ""
+            type: "", brand_day_offer: ""
         },
         onSubmit: async (values) => {
             let AxiosFetch;
@@ -136,8 +136,7 @@ export default function BrandDetailsModal({ setReload, reload, brandEditData, se
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                className="modal">
+                aria-describedby="modal-modal-description" className="modal">
                 <Box className={Styles.style}>
                     <div className="modal_title">
                         <h2>Create Brands</h2>
@@ -154,6 +153,10 @@ export default function BrandDetailsModal({ setReload, reload, brandEditData, se
                             <input type='text' placeholder='Description' id='description' name='description' onChange={handleChange} value={values.description} onBlur={handleBlur} />
                         </div>
 
+                        <div >
+                            <label htmlFor="brand_day_offer">Brand day offer</label>
+                            <input type='text' placeholder='Brand day offer' id='brand_day_offer' name='brand_day_offer' onChange={handleChange} value={values.brand_day_offer} onBlur={handleBlur} />
+                        </div>
                         <div className='BrandType'>
 
                             {/* <ThemeProvider theme={theme}> */}
