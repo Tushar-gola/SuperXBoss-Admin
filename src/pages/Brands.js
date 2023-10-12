@@ -227,7 +227,6 @@ export default function Brands() {
                 </Grid>
             </Box>
 
-            {totalPages && (
                 <CustomTable
                     rowData={brandData}
                     columns={brandColumns}
@@ -237,7 +236,7 @@ export default function Brands() {
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
                 />
-            )}
+        
 
 
             {/* Modal */}

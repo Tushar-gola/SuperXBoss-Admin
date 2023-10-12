@@ -164,7 +164,7 @@ export default function Order() {
                 </Grid>
             </Box>
 
-            {totalPages && (
+          
                 <CustomTable
                     rowData={order}
                     columns={orderColumns}
@@ -175,7 +175,6 @@ export default function Order() {
                     rowsPerPage={rowsPerPage}
                     orderSty={true}
                 />
-            )}
 
             <OrderDetails open={open} onClose={() => setOpen(false)} order_id={getOrderId} />
         </>

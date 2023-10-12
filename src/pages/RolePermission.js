@@ -128,7 +128,7 @@ export default function RolePemission() {
                     </Grid>
                 </Grid>
             </Box>
-            {totalPages && (
+          
                 <CustomTable
                     rowData={Roles}
                     columns={RoleColumns}
@@ -138,7 +138,7 @@ export default function RolePemission() {
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
                 />
-            )}
+           
 
             <AddRolePermission modalOpen={openRolePermission} modalClose={() => { setOpenRolePermission(false) }} RoleData={roleData} />
         </>

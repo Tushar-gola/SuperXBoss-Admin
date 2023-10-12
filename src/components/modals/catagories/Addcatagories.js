@@ -7,7 +7,6 @@ import AxiosFetchMethod from "../../../utils/AxiosInstance";
 import Styles from '../../../pages/style.module.css'
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
-import { Category } from "@mui/icons-material";
 import { CategoryValidate } from '../../../schemas/index'
 export default function Addcatagories({ editRowData, setEditRowData, catRowSingleData, setCatRowSingleData, reload, setReload }) {
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Grid, Box, FormControlLabel, Switch } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../actions/index";
 import SubCataModal from '../components/modals/sub-Catagories/SubCataModal'
@@ -11,7 +11,7 @@ import moment from 'moment/moment';
 import SubCategoryImageModal from '../components/modals//sub-Catagories/SubCategoryImageModal';
 import CustomTable from "../helpers/CustomTable";
 import RetrieveData from '../utils/RetrieveData';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 import SearchField from '../components/SearchField';
 import SelectSearch from '../components/SelectSearch';
@@ -27,10 +27,10 @@ export default function SubCategories() {
     const [catUserId, setCatUserId] = React.useState(false)
     const [modalOpen, setModalOpen] = React.useState(false)
     // ********************* Main States End ******************************** 
-    const location = useLocation();
     const dispatch = useDispatch();
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
+     
     };
     let token = localStorage.getItem("token");
     let brToken = `Bearer ${token}`;
@@ -111,7 +111,6 @@ export default function SubCategories() {
         }
     ];
     let { id } = useParams();
-    // ********************* SubCatagriesRetreive Data Retrevie Start ******************************** 
 
     const SubCatagriesRetreive = async () => {
         dispatch(openLoader(true));
@@ -135,10 +134,6 @@ export default function SubCategories() {
         }
     }, [rowsPerPage, page, reload, id])
 
-    // ********************* SubCatagriesRetreive Data Retrevie End******************************** 
-
-    // ********************* SubCatagriesRetreive Status Update Start******************************** 
-
     const handleSwitch = async (id, status) => {
         dispatch(openLoader(true));
         let AxiosFetch = await AxiosFetchMethod(
@@ -156,11 +151,8 @@ export default function SubCategories() {
         }
     };
 
-    // ********************* SubCatagriesRetreive Status Update End ******************************** 
-
     const getData = async (value) => {
         dispatch(openLoader(true));
-
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-category-panel`,
@@ -202,8 +194,6 @@ export default function SubCategories() {
                 </Grid>
             </Box>
 
-
-            {totalPages && (
                 <CustomTable
                     rowData={subCatData}
                     columns={subCatagriesColumns}
@@ -212,9 +202,8 @@ export default function SubCategories() {
                     page={page}
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
-                />
-            )}
-
+            />
+            
             <SubCategoryImageModal catUserId={catUserId} modalOpen={modalOpen} modalClose={() => setModalOpen(false)} reload={reload} setReload={setReload} />
 
         </>

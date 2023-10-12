@@ -118,14 +118,14 @@ export default function Vechiles() {
     }
 
     const vehicleRetrieve = async () => {
-        let { data: { count, rows } } = await AxiosFetchMethod_2({
+        let { data } = await AxiosFetchMethod_2({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/vehicle-segments-retrieve`,
             headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage, brand_id: loaction.state }
         });
-        setTotalPages(count ?? 0)
-        setRowData(rows)
+        setTotalPages(data?.count)
+        setRowData(data?.rows)
     }
     useEffect(() => {
         try {
@@ -154,7 +154,6 @@ export default function Vechiles() {
                 </Grid>
             </Box>
 
-            {totalPages && (
                 <CustomTable
                     rowData={rowData}
                     columns={vehicleData}
@@ -164,8 +163,7 @@ export default function Vechiles() {
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
                 />
-            )}
-
+           
             <VechilesImageModal
                 modalOpen={modalImage}
                 modalClose={() => setModalImage(false)}

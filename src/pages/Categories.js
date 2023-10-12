@@ -227,7 +227,7 @@ export default function Categories() {
                 </Grid>
             </Box>
 
-            {totalPages && (
+
                 <CustomTable
                     rowData={catagriesDataRetrive}
                     columns={catagoriesColumns}
@@ -237,7 +237,7 @@ export default function Categories() {
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
                 />
-            )}
+
 
             <ImageModal
                 modalOpen={modalImage}

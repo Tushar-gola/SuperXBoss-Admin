@@ -124,11 +124,11 @@ export default function Product() {
         { id: "price", label: "Price" },
         { id: "part_no", label: "Part number" },
         { id: "b2b_price", label: "B2B_Price" },
-        {
-            id: "segment", label: "Vehicle Segments", renderCell: (parms) => {
-                return (parms?.segment?.name)
-            }
-        },
+        // {
+        //     id: "segment", label: "Vehicle Segments", renderCell: (parms) => {
+        //         return (parms?.segment?.name)
+        //     }
+        // },
 
         {
             id: "trend_part", label: "Trend", renderCell: (parms) => {
@@ -337,6 +337,8 @@ export default function Product() {
                         <SelectSearch debounceGetData={debounceGetData} sparePart={false} segment={false} statusCheck={true} label="Trend" KeyId="trend" />
                     </Grid>
 
+                    <Grid item xs={2}></Grid>
+                    
                     <Grid item xs={2} >
                         <SelectSearch debounceGetData={debounceGetData} sparePart={false} segment={false} statusCheck={true} label="New Arrival" KeyId="arrival" />
                     </Grid>
@@ -347,7 +349,7 @@ export default function Product() {
                 </Grid>
             </Box>
 
-            {totalPages && (
+          
                 <CustomTable
                     rowData={productData}
                     columns={productColumns}
@@ -357,7 +359,6 @@ export default function Product() {
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
                 />
-            )}
 
             <BrandModal modalOpen={openBrandModal} modalClose={() => { setOpenBrandModal(false) }} data={vehicleBrandData} id={productId} productData={vehicleEdit} />
 

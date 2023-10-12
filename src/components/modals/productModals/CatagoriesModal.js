@@ -15,6 +15,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import Collapse from '@mui/material/Collapse';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import SendIcon from '@mui/icons-material/Send';
 
 function MinusSquare(props) {
     return (
@@ -117,7 +118,6 @@ export default function CatagoriesModal({ modalOpen, modalClose }) {
                                         fontSize: "1.5rem"
                                     }
                                 }} />
-                            {/* {node.label} */}
                         </FormGroup >
                     </div>
                 }
@@ -140,7 +140,6 @@ export default function CatagoriesModal({ modalOpen, modalClose }) {
         if (!node) return;
         const nodeId = node.id;
         const isChecked = checkedIds.includes(nodeId);
-        // Toggle the checked state of the node
         if (isChecked) {
             setCheckedIds((prev) => prev.filter((id) => id !== nodeId));
         } else {
@@ -166,7 +165,7 @@ export default function CatagoriesModal({ modalOpen, modalClose }) {
     };
 
     console.log([...new Set(checkedIds)])
-
+console.log(checkedIds,"checkedIds");
 
 
     // console.log(checked,"mmmmmmmmmmm");
@@ -180,7 +179,7 @@ export default function CatagoriesModal({ modalOpen, modalClose }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 className="modal">
-                <Box className={Styles.style3} sx={{ padding: "2rem" }}>
+                <Box className={Styles.style3} sx={{ padding: "2rem",position:"relative" }}>
                     <div className="modal_title">
                         <h2>Create Category Modal</h2>
                     </div>
@@ -196,6 +195,35 @@ export default function CatagoriesModal({ modalOpen, modalClose }) {
                     >
                         {renderTreeItems(categoryModalData)}
                     </TreeView>
+                 <div
+                            className="modal_btn"
+                            style={{
+                                display: "flex",
+                                gap: "1rem",
+                                justifyContent: "flex-end",
+                                position: "sticky",
+                                bottom:0
+                                
+                            }}
+                        >
+
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    border: "2px solid #1B4B66",
+                                    '&:hover': {
+                                        border: "2px solid #1B4B66",
+                                    }
+                                }}
+                                onClick={modalClose}
+                                className="btn_main2"
+                            >
+                                Close
+                            </Button>
+                            <Button variant="contained" className="btn_main" type="submit" endIcon={<SendIcon />}>
+                                Submit
+                            </Button>
+                        </div>
                 </Box>
             </Modal>
         </>

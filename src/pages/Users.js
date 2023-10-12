@@ -210,7 +210,7 @@ export default function Users() {
         </Grid>
       </Box>
 
-      {totalPages && (
+     
         <CustomTable
           rowData={userData}
           columns={userColumns}
@@ -220,8 +220,7 @@ export default function Users() {
           setPage={setPage}
           rowsPerPage={rowsPerPage}
         />
-      )}
-
+     
       <AssignPermission modalOpen={assignPermission} modalClose={() => { setAssignPermission(false); setEditUserData(false) }} id={userId} />
     </>
   );

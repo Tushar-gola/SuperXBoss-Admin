@@ -188,7 +188,7 @@ export default function Customer() {
                 </Grid>
             </Box>
 
-            {totalPages && (
+       
                 <CustomTable
                     rowData={userData}
                     columns={userColumns}
@@ -198,7 +198,7 @@ export default function Customer() {
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
                 />
-            )}
+         
 
         </>
     );

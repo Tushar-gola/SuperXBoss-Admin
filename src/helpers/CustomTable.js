@@ -25,7 +25,8 @@ export default function CustomTable({ rowData, columns, totalPages, handleChange
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                                {columns.map((column) => (
+                                {columns.map((column) => {
+                                    return(
                                     < TableCell
                                         key={column.id}
                                         style={{
@@ -40,18 +41,18 @@ export default function CustomTable({ rowData, columns, totalPages, handleChange
                                     >
                                         {column.label}
                                     </TableCell >
-                                ))}
+                                )})}
                             </TableRow>
                         </TableHead>
 
                         <TableBody>
-                            {rowData?.map((row, index) => {
+                            {rowData?.length > 0 ? rowData?.map((row, index) => {
                                 return (
                                     <TableRow key={row.id}>
                                         {columns?.map((column) => {
                                             const value = row[column.id];
                                             return (
-                                                <TableCell key={column.id} sx={{ textAlign: "center", fontSize: "1.4rem" }} style={orderSty == undefined ? sty : sty1} >
+                                                <TableCell key={column.id} sx={{ textAlign: "center", fontSize: "1.4rem" }} style={orderSty === undefined ? sty : sty1} >
                                                     {column.format && typeof value === 'number'
                                                         ? column.format(value)
                                                         : column.renderCell ? column.renderCell(row) : !!value ? value : "N/A"
@@ -61,7 +62,7 @@ export default function CustomTable({ rowData, columns, totalPages, handleChange
                                         })}
                                     </TableRow>
                                 );
-                            })}
+                            }):<TableRow><TableCell><h1>Data is not available ..........</h1></TableCell></TableRow>}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -69,7 +70,7 @@ export default function CustomTable({ rowData, columns, totalPages, handleChange
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
-                    count={totalPages}
+                    count={totalPages || 0}
                     rowsPerPage={rowsPerPage}
                     page={page - 1}
                     onPageChange={(e, page) => setPage(++page)}

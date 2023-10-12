@@ -89,7 +89,7 @@ export default function Shipping() {
             </Box>
 
 
-            {totalPages && (
+          
                 <CustomTable
                     rowData={shipping}
                     columns={shippingColumn}
@@ -100,7 +100,7 @@ export default function Shipping() {
                     rowsPerPage={rowsPerPage}
                     orderSty={true}
                 />
-            )}
+          
         </>
     )
 }
