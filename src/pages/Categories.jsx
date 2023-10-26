@@ -11,7 +11,8 @@ import { openLoader } from "../actions/index";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import moment from "moment/moment";
-export const Categories = () => {
+import { isAppendRow } from "../functions";
+export const Categories = React.memo(() => {
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [modalImage, setModalImage] = useState(false);
@@ -19,18 +20,12 @@ export const Categories = () => {
     const [catUserId, setCatUserId] = useState();
     const [editRowData, setEditRowData] = useState(false);
     const [catRowSingleData, setCatRowSingleData] = useState(null);
-    const [reload, setReload] = useState(false);
     const [totalPages, setTotalPages] = useState(null);
     const dispatch = useDispatch();
+    const user = JSON.parse(localStorage.getItem('user'))
     let token = localStorage.getItem("token");
     let brToken = `Bearer ${token}`;
     const handleChangeRowsPerPage = (event) => setRowsPerPage(+event.target.value);
-
-    useEffect(() => {
-        catagoriesRetrieve()
-    }, [page, rowsPerPage, reload])
-
-
     const catagoriesColumns = [
         {
             id: "icon",
@@ -41,7 +36,7 @@ export const Categories = () => {
                         setCatUserId(parms?.id)
                         setModalImage(true)
                     }}>
-                        <img src={`${process.env.REACT_APP_BASE_URL}/upload/categories/${parms?.icon}`} alt="_blank"/>
+                        <img src={`${process.env.REACT_APP_BASE_URL}/upload/categories/${parms?.icon}`} alt="_blank" />
                     </button>
                 );
             },
@@ -62,7 +57,7 @@ export const Categories = () => {
         },
         {
             id: "user", label: "Create By", renderCell: (parms) => {
-                return <div>{parms?.user?.name}</div>
+                return <div>{parms?.user?.name || user?.name}</div>
             },
         },
         {
@@ -103,15 +98,12 @@ export const Categories = () => {
                             <button
                                 title="Sub Catagries"
                                 style={{ padding: ".5rem" }}
-                            // onClick={() => GoSubCatagrie(parms.id)}
                             >
                                 <FontAwesomeIcon icon={faList} size="lg" />
                             </button>
                         </Link>
 
                         <FormControlLabel
-                            // sx={{backgroundColor:"red"}}
-                            // sx={{ backgroundColor: theme.palette.primary.light }}
                             control={<Switch size="small" checked={parms.status} sx={{
                                 span: {
                                     span: {
@@ -126,21 +118,6 @@ export const Categories = () => {
             },
         },
     ];
-
-    const handleSwitch = async (id, status) => {
-        dispatch(openLoader(true));
-        let data = await AxiosFetchMethod({
-            url: `${process.env.REACT_APP_BASE_URL}/api/update/statusUpdate`,
-            method: "put",
-            data: { catId: id, statusId: status },
-            headers: { Authorization: brToken },
-        });
-        if (data) {
-            dispatch(openLoader(false));
-            setReload(!reload);
-        }
-    };
-
     const catagoriesRetrieve = async () => {
         dispatch(openLoader(true));
         let { data } = await RetrieveData({
@@ -156,27 +133,9 @@ export const Categories = () => {
         } else {
             dispatch(openLoader(false));
         }
-    }
-
-    const pagePost = async (id, featuredId) => {
-        dispatch(openLoader(true));
-        let AxiosFetch = await AxiosFetchMethod({
-            url: `${process.env.REACT_APP_BASE_URL}/api/update/featuredUpdate`,
-            method: "put",
-            data: { catId: id, featuredId: featuredId },
-            headers: { Authorization: brToken },
-        });
-        if (AxiosFetch.type === "success") {
-            dispatch(openLoader(false));
-            setReload(!reload);
-        } else {
-            dispatch(openLoader(false));
-        }
     };
-
     const getData = async (value) => {
         dispatch(openLoader(true));
-
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-category-panel`,
@@ -188,8 +147,7 @@ export const Categories = () => {
             setCatagriesDataRetrive(data?.rows);
             setTotalPages(data.rows?.length)
         }
-    }
-
+    };
     const debounce = (func, time) => {
         let Timer;
         return (...args) => {
@@ -198,10 +156,37 @@ export const Categories = () => {
                 func(args)
             }, time)
         }
-    }
+    };
     const debounceGetData = debounce(getData, 2000);
-
-
+    const updateCategory = async (id, data, type) => {
+        dispatch(openLoader(true));
+        try {
+            const response = await AxiosFetchMethod({
+                url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-category`,
+                method: "put",
+                data: { catId: id, ...data },
+                headers: { Authorization: brToken },
+            });
+            if (response.type === "success") {
+                isAppendRow(setCatagriesDataRetrive, response.data);
+            }
+        } catch (error) {
+            console.error("Error updating data:", error);
+        } finally {
+            dispatch(openLoader(false));
+        }
+    };
+    
+    const handleSwitch = (id, status) => {
+        updateCategory(id, { statusId: status }, "switch");
+    };
+    
+    const pagePost = (id, featuredId) => {
+        updateCategory(id, { featuredId }, "page");
+    };
+    useEffect(() => {
+        catagoriesRetrieve()
+    }, [page, rowsPerPage])
     return (
         <>
             <Box sx={{ flexGrow: 1, px: "2.8rem" }}>
@@ -209,11 +194,10 @@ export const Categories = () => {
                     <Grid item xs={2}>
                         <Addcatagories
                             editRowData={editRowData}
-                            reload={reload}
-                            setReload={setReload}
                             setEditRowData={setEditRowData}
                             catRowSingleData={catRowSingleData}
                             setCatRowSingleData={setCatRowSingleData}
+                            setCatagriesDataRetrive={setCatagriesDataRetrive}
                         />
                     </Grid>
                     <Grid item xs={2}>
@@ -242,9 +226,8 @@ export const Categories = () => {
                 modalOpen={modalImage}
                 modalClose={() => setModalImage(false)}
                 catUserId={catUserId}
-                reload={reload}
-                setReload={setReload}
+                setCatagriesDataRetrive={setCatagriesDataRetrive}
             />
         </>
     );
-}
+})

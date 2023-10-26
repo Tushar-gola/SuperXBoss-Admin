@@ -7,6 +7,7 @@ import { AxiosFetchMethod, RetrieveData } from "../utils";
 import { openLoader } from "../actions/index";
 import { styled } from '@mui/material/styles';
 import { useDispatch } from "react-redux";
+import { isAppendRow } from '../functions';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
@@ -59,7 +60,7 @@ export const Coupon = () => {
             }, 3000);
         };
         return (
-            <Grid item xs={6} sm={4} md={3} className='coupon-grid'  >
+            <Grid item xs={6} sm={4} md={4} className='coupon-grid'  >
                 <div className="container">
                     <div className={`card card-${item?.status}`} >
                         <div className="main" style={{ display: "flex", justifyContent: "center", textAlign: "center" }}>
@@ -95,7 +96,7 @@ export const Coupon = () => {
     }
     useEffect(() => {
         CouponRetrieve()
-    }, [reload])
+    }, [])
 
     const CouponRetrieve = async () => {
         dispatch(openLoader(true));
@@ -113,12 +114,14 @@ export const Coupon = () => {
     const handleSwitch = async (id, status) => {
         dispatch(openLoader(true));
         let data = await AxiosFetchMethod({
-            url: `${process.env.REACT_APP_BASE_URL}/api/update/coupon-status`,
+            url: `${process.env.REACT_APP_BASE_URL}/api/update/coupon-update`,
             method: "put",
-            data: { couponId: id, statusId: status },
+            data: { id, status },
             headers: { Authorization: brToken },
         });
+        console.log(data);
         if (data) {
+            isAppendRow(setCouponData, data.data)
             dispatch(openLoader(false));
             setReload(!reload);
         }
@@ -155,7 +158,7 @@ export const Coupon = () => {
             <Box sx={{ flexGrow: 1, px: "2.8rem" }}>
                 <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
                     <Grid item xs={2}>
-                        <CouponModal reload={reload} setReload={setReload} couponModalOpen={couponModalOpen} setCouponModalOpen={() => setCouponModalOpen(false)} modaldata={modaldata} setModaldata={setModaldata} />
+                        <CouponModal setCouponData={setCouponData} couponModalOpen={couponModalOpen} setCouponModalOpen={() => setCouponModalOpen(false)} modaldata={modaldata} setModaldata={setModaldata} />
                     </Grid>
 
                     <Grid item xs={2}>

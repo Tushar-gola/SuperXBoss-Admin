@@ -3,12 +3,13 @@ import { Box, Grid, Button, Stack, Modal } from '@mui/material';
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import SendIcon from '@mui/icons-material/Send';
 import UploadIcon from "../../../images/icons8-upload-to-the-cloud-50.png";
 import AddIcon from '@mui/icons-material/Add';
 import Styles from '../../../pages/style.module.css'
-export const BannerModal = ({ reload, setReload }) => {
+import { isAppendRow } from '../../../functions';
+export const BannerModal = ({ setBannerData }) => {
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -23,7 +24,7 @@ export const BannerModal = ({ reload, setReload }) => {
         banner_image: "",
         Url: ''
     })
-    const maxSize = 800 * 1024; // 800kb in bytes
+    const maxSize = 800 * 1024;
 
 
 
@@ -51,6 +52,7 @@ export const BannerModal = ({ reload, setReload }) => {
                 } else {
 
                     if (AxiosFetch.type === "success") {
+                        isAppendRow(setBannerData, AxiosFetch.data)
                         dispatch(openLoader(false));
                         setBannerImage({
                             ...bannerImage,
@@ -58,7 +60,6 @@ export const BannerModal = ({ reload, setReload }) => {
                             banner_image: ""
                         })
                         handleClose()
-                        setReload(!reload)
                     }
                 }
             },

@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { openLoader } from "../actions/index";
 import { useDispatch } from "react-redux";
 import moment from 'moment/moment';
+import { isAppendRow } from '../functions';
 export const Brands = () => {
     const [page, setPage] = React.useState(1);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -18,6 +19,7 @@ export const Brands = () => {
     const [brandData, setBrandData] = useState([])
     const [totalPages, setTotalPages] = useState(0)
     const [reload, setReload] = useState(false)
+    const user = JSON.parse(localStorage.getItem('user'))
     const [brandEditData, setBrandEditData] = useState(null)
     const [brandEditModalOpen, setBrandEditModalOpen] = useState(false)
     const [brandId, setBrandId] = useState(null)
@@ -25,7 +27,6 @@ export const Brands = () => {
     const navigate = useNavigate();
     let token = localStorage.getItem("token");
     let brToken = `Bearer ${token}`;
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
@@ -50,8 +51,8 @@ export const Brands = () => {
                 return (
                     <StarBorderIcon
                         sx={{ fontSize: 30 }}
-                        className={`featured-${parms.featured}`}
-                        onClick={() => pagePost(parms.id, parms.featured)}
+                        className={`featured-${parms.brand_day}`}
+                        onClick={() => pagePost(parms.id, parms.brand_day)}
                     />
                 );
             },
@@ -60,7 +61,7 @@ export const Brands = () => {
         { id: "brand_day_offer", label: 'Brand Day Offer' },
         {
             id: "user_id", label: 'Create By', renderCell: (parms) => {
-                return <div>{parms?.user.name}</div>
+                return <div>{parms?.user?.name || user?.name}</div>
 
             }
         },
@@ -130,70 +131,43 @@ export const Brands = () => {
 
     const BrandDataRetrieve = async () => {
         dispatch(openLoader(true));
-        let { data } = await RetrieveData({
-            method: "get",
-            url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/main-brands-retrieve`,
-            headers: { Authorization: brToken },
-            params: { page, limit: rowsPerPage }
-        });
-        if (data) {
-            dispatch(openLoader(false));
-            setTotalPages(data?.count)
-            setBrandData(data?.rows)
-        }
-    }
-
-    useEffect(() => {
-        BrandDataRetrieve()
-    }, [page, rowsPerPage, reload])
-
-    const pagePost = async (id, featured) => {
-        dispatch(openLoader(true));
-        let AxiosFetch = await AxiosFetchMethod(
-            {
-                url: `${process.env.REACT_APP_BASE_URL}/api/update/brand-featured`,
-                method: "put",
-                data: { id: id, featuredId: featured },
+        try {
+            const { data } = await RetrieveData({
+                method: "get",
+                url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/main-brands-retrieve`,
                 headers: { Authorization: brToken },
+                params: { page, limit: rowsPerPage }
             });
-        if (AxiosFetch) {
+            if (data) {
+                dispatch(openLoader(false));
+                setTotalPages(data?.count || 0);
+                setBrandData(data?.rows || []);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
             dispatch(openLoader(false));
-            setReload(!reload)
         }
-    }
-
-
-    const handleSwitch = async (id, status) => {
-        dispatch(openLoader(true));
-        let AxiosFetch = await AxiosFetchMethod({
-            url: `${process.env.REACT_APP_BASE_URL}/api/update/brand-status`,
-            method: "put",
-            data: { brandId: id, statusId: status },
-            headers: { Authorization: brToken },
-        });
-        if (AxiosFetch) {
-            dispatch(openLoader(false));
-            setReload(!reload)
-        }
-    }
-
-
+    };
     const getData = async (value) => {
         dispatch(openLoader(true));
-
-        let { data } = await RetrieveData({
-            method: "get",
-            url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-brand-panel`,
-            headers: { Authorization: brToken },
-            params: { page, limit: rowsPerPage, value: value[0] }
-        });
-        if (data) {
+        try {
+            const { data } = await RetrieveData({
+                method: "get",
+                url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-brand-panel`,
+                headers: { Authorization: brToken },
+                params: { page, limit: rowsPerPage, value: value[0] }
+            });
+            if (data) {
+                setBrandData(data.rows);
+                setTotalPages(data.count);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
             dispatch(openLoader(false));
-            setBrandData(data?.rows);
-            setTotalPages(data.rows?.length)
         }
     }
-
     const debounce = (func, time) => {
         let Timer;
         return (...args) => {
@@ -204,13 +178,44 @@ export const Brands = () => {
         }
     }
     const debounceGetData = debounce(getData, 2000);
+    const updateBrand = async (id, data) => {
+        dispatch(openLoader(true));
+        try {
+            const response = await AxiosFetchMethod({
+                url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-brand`,
+                method: "put",
+                data: { brandId: id, ...data },
+                headers: { Authorization: brToken },
+            });
+            if (response) {
+                isAppendRow(setBrandData, response.data);
+            }
+        } catch (error) {
+            console.error("Error updating data:", error);
+        } finally {
+            dispatch(openLoader(false));
+        }
+    };
+
+    const handleSwitch = (id, status) => {
+        updateBrand(id, { status: status });
+    };
+
+    const pagePost = (id, featured) => {
+        updateBrand(id, { brand_day: featured });
+    };
+
+    useEffect(() => {
+        BrandDataRetrieve()
+    }, [page, rowsPerPage])
+
     return (
 
         <>
             <Box sx={{ flexGrow: 1, px: '2.8rem', }}>
                 <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
                     <Grid item xs={2}>
-                        <BrandDetailsModal setReload={setReload} reload={reload} brandEditData={brandEditData} setBrandEditData={setBrandEditData} setBrandEditModalOpen={setBrandEditModalOpen} brandEditModalOpen={brandEditModalOpen} />
+                        <BrandDetailsModal brandEditData={brandEditData} setBrandData={setBrandData} setBrandEditData={setBrandEditData} setBrandEditModalOpen={setBrandEditModalOpen} brandEditModalOpen={brandEditModalOpen} />
                     </Grid>
 
                     <Grid item xs={2}>

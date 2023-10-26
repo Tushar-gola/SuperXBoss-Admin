@@ -7,7 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Stack, Button, Dialog, Grid } from "@mui/material";
 import { CouponValidate } from "../../../schemas";
 import { openLoader } from "../../../actions/index";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';
 import { enqueueSnackbar } from 'notistack'
@@ -16,12 +16,13 @@ import Slide from '@mui/material/Slide';
 import { useFormik } from "formik";
 import moment from "moment/moment";
 import dayjs from 'dayjs';
+import { isAppendRow } from "../../../functions";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const CouponModal =({ reload, setReload, couponModalOpen, setCouponModalOpen, modaldata, setModaldata }) => {
+export const CouponModal = ({ setCouponData, couponModalOpen, setCouponModalOpen, modaldata, setModaldata }) => {
     const [open, setOpen] = useState(false);
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
@@ -48,7 +49,7 @@ export const CouponModal =({ reload, setReload, couponModalOpen, setCouponModalO
         return () => {
             window.addEventListener('keyup', handleKeyPress);
         }
-    }, []); // E=>mpty dependency array means this effect runs only once
+    }, []);
     useEffect(() => {
         setOpen(couponModalOpen)
     }, [couponModalOpen])
@@ -96,6 +97,7 @@ export const CouponModal =({ reload, setReload, couponModalOpen, setCouponModalO
                     } else {
                         if (AxiosFetch.type === "success") {
                             dispatch(openLoader(false));
+                            isAppendRow(setCouponData, AxiosFetch.data)
                             values.code = ""
                             values.description = ""
                             values.amount = ""
@@ -103,7 +105,6 @@ export const CouponModal =({ reload, setReload, couponModalOpen, setCouponModalO
                             setStartDate('')
                             setEndDate('')
                             handleClose()
-                            setReload(!reload)
                         }
                     }
                 } else {

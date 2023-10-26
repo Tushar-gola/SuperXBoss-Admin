@@ -72,7 +72,7 @@ export const AddRolePermission =({ modalOpen, modalClose, RoleData }) => {
                 let AxiosFetch = await AxiosFetchMethod({
                     url: `${process.env.REACT_APP_BASE_URL}/api/create/role-assign-permission`,
                     method: "post",
-                    data: { role_id: RoleData?.id, permission_id: checked },
+                    data: { role_id: RoleData.id, permission_id: checked },
                     headers: { Authorization: brToken },
                 });
                 if (AxiosFetch?.response?.data.type === "error") {

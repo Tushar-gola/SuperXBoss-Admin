@@ -4,11 +4,12 @@ import { Box, Grid, Button, Switch, FormControlLabel } from '@mui/material';
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../actions/index";
-import {AxiosFetchMethod, RetrieveData} from "../utils";
+import { AxiosFetchMethod, RetrieveData } from "../utils";
 import SendIcon from '@mui/icons-material/Send';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import { styled } from '@mui/material/styles';
 import { WalletValidate } from '../schemas'
+import { isAppendRow } from '../functions';
 const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
     '& .MuiSwitch-track': {
@@ -50,7 +51,7 @@ export const WalletOffer = () => {
     let brToken = `Bearer ${token}`;
     useEffect(() => {
         RechargeRetrieve()
-    }, [reload])
+    }, [])
 
     useEffect(() => {
         if (editRechargeData) {
@@ -64,36 +65,68 @@ export const WalletOffer = () => {
                 amount: "",
                 offer_amount: "",
             },
-            validationSchema: WalletValidate
-            ,
+            validationSchema: WalletValidate,
             onSubmit: async (val̥ues) => {
-                let AxiosFetch;
+                //     let AxiosFetch;
+                //     dispatch(openLoader(true));
+                //     if (editRechargeData) {
+                //         AxiosFetch = await AxiosFetchMethod({
+                //             url: `${process.env.REACT_APP_BASE_URL}/api/update/recharge-update`,
+                //             method: "put",
+                //             data: values,
+                //             headers: { Authorization: brToken },
+                //         }); setEditRechargeData(null)
+                //     } else {
+                //         AxiosFetch = await AxiosFetchMethod({
+                //             url: `${process.env.REACT_APP_BASE_URL}/api/create/recharge-create`,
+                //             method: "post",
+                //             data: values,
+                //             headers: { Authorization: brToken },
+                //         });
+                //     }
+                //     if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
+                //         dispatch(openLoader(false));
+                //     } else {
+
+                //         if (AxiosFetch.type === "success") {
+                //             isAppendRow(setRechargeData, AxiosFetch.data);
+                //             dispatch(openLoader(false));
+                //             values.amount = ""
+                //             values.offer_amount = ""
+                //         }
+                //     }
+                // },
                 dispatch(openLoader(true));
-                if (editRechargeData) {
-                    AxiosFetch = await AxiosFetchMethod({
-                        url: `${process.env.REACT_APP_BASE_URL}/api/update/recharge-update`,
-                        method: "put",
-                        data: values,
-                        headers: { Authorization: brToken },
-                    }); setEditRechargeData(null)
-                } else {
-                    AxiosFetch = await AxiosFetchMethod({
-                        url: `${process.env.REACT_APP_BASE_URL}/api/create/recharge-create`,
-                        method: "post",
+
+                const url = editRechargeData
+                    ? `${process.env.REACT_APP_BASE_URL}/api/update/recharge-update`
+                    : `${process.env.REACT_APP_BASE_URL}/api/create/recharge-create`;
+
+                const method = editRechargeData ? "put" : "post";
+
+                try {
+                    const AxiosFetch = await AxiosFetchMethod({
+                        url,
+                        method,
                         data: values,
                         headers: { Authorization: brToken },
                     });
-                }
-                if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
-                    dispatch(openLoader(false));
-                } else {
 
-                    if (AxiosFetch.type === "success") {
+                    if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
                         dispatch(openLoader(false));
-                        values.amount = ""
-                        values.offer_amount = ""
-                        setReload(!reload)
+                    } else {
+                        if (AxiosFetch.type === "success") {
+                            isAppendRow(setRechargeData, AxiosFetch.data);
+                            dispatch(openLoader(false));
+                            setValues({
+                                amount: "",
+                                offer_amount: "",
+                            });
+                        }
                     }
+                } catch (error) {
+                    console.error('Error:', error);
+                    dispatch(openLoader(false));
                 }
             },
         });
@@ -124,6 +157,7 @@ export const WalletOffer = () => {
             headers: { Authorization: brToken },
         });
         if (data) {
+            isAppendRow(setRechargeData, data.data);
             dispatch(openLoader(false));
             setReload(!reload);
         }

@@ -3,10 +3,11 @@ import { Box, Modal, Stack, Button } from "@mui/material";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import Styles from '../../../pages/style.module.css'
 import AddIcon from '@mui/icons-material/Add';
-export const AddRole =({ reload, setReload }) => {
+import { isAppendRow } from '../../../functions';
+export const AddRole = ({ setRoles }) => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
     let token = localStorage.getItem("token");
@@ -44,11 +45,11 @@ export const AddRole =({ reload, setReload }) => {
                     dispatch(openLoader(false));
                 } else {
                     if (AxiosFetch.type === "success") {
+                        isAppendRow(setRoles, AxiosFetch.data)
                         dispatch(openLoader(false));
                         values.name = ""
                         values.description = ""
                         handleClose()
-                        setReload(!reload)
                     }
                 }
 
@@ -96,7 +97,7 @@ export const AddRole =({ reload, setReload }) => {
                                 placeholder="Name"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.name}
+                                value={values.name || ''}
                             />
                         </div>
                         <div>
@@ -109,13 +110,9 @@ export const AddRole =({ reload, setReload }) => {
                                 placeholder="Description"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.description}
+                                value={values.description || ''} 
                             />
                         </div>
-
-
-
-
                         <div
                             className="modal_btn"
                             style={{

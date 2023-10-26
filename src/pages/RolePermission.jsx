@@ -9,6 +9,7 @@ import {CustomTable} from "../helpers";
 import {AxiosFetchMethod, RetrieveData} from "../utils";
 import { openLoader } from "../actions/index";
 import { useDispatch } from "react-redux";
+import { isAppendRow } from '../functions';
 
 
 export const RolePermission = () => {
@@ -76,10 +77,12 @@ export const RolePermission = () => {
             let data = await AxiosFetchMethod({
                 url: `${process.env.REACT_APP_BASE_URL}/api/update/role-status`,
                 method: "put",
-                data: { id: id, statusId: status },
+                data: { id: id, status: status },
                 headers: { Authorization: brToken },
             });
+            console.log(data);
             if (data) {
+                isAppendRow(setRoles, data.data)
                 dispatch(openLoader(false));
                 setReload(!reload);
             } else {
@@ -111,7 +114,7 @@ export const RolePermission = () => {
             dispatch(openLoader(false));
         } catch (error) {
             console.error("An error occurred:", error);
-            dispatch(openLoader(false)); // Make sure to close the loader in case of an error.
+            dispatch(openLoader(false));
         }
     };
 
@@ -121,7 +124,7 @@ export const RolePermission = () => {
             <Box sx={{ flexGrow: 1, px: '2.8rem', }}>
                 <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
                     <Grid item xs={4}>
-                        <AddRole reload={reload} setReload={setReload} />
+                        <AddRole setRoles={setRoles} />
                     </Grid>
                 </Grid>
             </Box>

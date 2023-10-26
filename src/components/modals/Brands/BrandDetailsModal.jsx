@@ -3,12 +3,13 @@ import React, { useEffect } from 'react'
 import { Stack, Button, Modal, Box, MenuItem, Select } from '@mui/material';
 import Styles from '../../../pages/style.module.css'
 import { useFormik } from 'formik';
-import {AxiosFetchMethod} from '../../../utils';
+import { AxiosFetchMethod } from '../../../utils';
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
 import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/material/styles';
 import SendIcon from '@mui/icons-material/Send';
+import { isAppendRow } from '../../../functions';
 
 const CustomSelect = styled(Select)({
     backgroundColor: 'white',
@@ -25,7 +26,7 @@ const CustomMenuItem = styled(MenuItem)(({ theme }) => ({
     },
 }));
 
-export const BrandDetailsModal = ({ setReload, reload, brandEditData, setBrandEditData, brandEditModalOpen, setBrandEditModalOpen }) => {
+export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandData, brandEditModalOpen, setBrandEditModalOpen }) => {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
     let token = localStorage.getItem("token");
@@ -77,39 +78,41 @@ export const BrandDetailsModal = ({ setReload, reload, brandEditData, setBrandEd
         initialValues: {
             name: "",
             description: "",
-            type: "", brand_day_offer: ""
+            type: "",
+            brand_day_offer: ""
         },
         onSubmit: async (values) => {
-            let AxiosFetch;
             dispatch(openLoader(true));
-            if (brandEditData) {
-                AxiosFetch = await AxiosFetchMethod({
-                    url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-brand`,
-                    method: "put",
-                    data: values,
-                    headers: { Authorization: brToken },
-                })
-                brandEditData = null
+            let url;
+            let method;
 
+            if (brandEditData) {
+                url = `${process.env.REACT_APP_BASE_URL}/api/update/edit-brand`;
+                method = "put";
             } else {
-                AxiosFetch = await AxiosFetchMethod({
-                    url: `${process.env.REACT_APP_BASE_URL}/api/create/create-brand`,
-                    method: "post",
-                    data: values,
-                    headers: { Authorization: brToken }
-                })
+                url = `${process.env.REACT_APP_BASE_URL}/api/create/create-brand`;
+                method = "post";
             }
-            if (AxiosFetch?.response?.data.type === "error" || AxiosFetch?.type === "error") {
+
+            const AxiosFetch = await AxiosFetchMethod({
+                url,
+                method,
+                data: values,
+                headers: { Authorization: brToken },
+            });
+            console.log(AxiosFetch);
+
+            if (AxiosFetch?.type === "success") {
                 dispatch(openLoader(false));
-            } else {
-                if (AxiosFetch?.type === "success") {
-                    dispatch(openLoader(false));
-                    values.name = ""
-                    values.description = ""
-                    values.type = ""
-                    handleClose()
-                    setReload(!reload)
-                }
+                isAppendRow(setBrandData, AxiosFetch.data);
+                setValues({
+                    name: "",
+                    description: "",
+                    type: "",
+                    brand_day_offer: ""
+                });
+                setBrandEditData(null);
+                handleClose();
             }
 
         }
@@ -145,23 +148,21 @@ export const BrandDetailsModal = ({ setReload, reload, brandEditData, setBrandEd
                     <form className="catagories_form" onSubmit={handleSubmit}>
                         <div className='BrandName'>
                             <label htmlFor="name">Name</label>
-                            <input type='text' placeholder='Name' id='name' name='name' onChange={handleChange} value={values.name} onBlur={handleBlur} />
+                            <input type='text' placeholder='Name' id='name' name='name' onChange={handleChange} value={values.name || ''} onBlur={handleBlur} />
                         </div>
 
                         <div className='BrandDescription'>
                             <label htmlFor="description">Description</label>
-                            <input type='text' placeholder='Description' id='description' name='description' onChange={handleChange} value={values.description} onBlur={handleBlur} />
+                            <input type='text' placeholder='Description' id='description' name='description' onChange={handleChange} value={values.description || ''} onBlur={handleBlur} />
                         </div>
 
                         <div >
                             <label htmlFor="brand_day_offer">Brand day offer</label>
-                            <input type='text' placeholder='Brand day offer' id='brand_day_offer' name='brand_day_offer' onChange={handleChange} value={values.brand_day_offer} onBlur={handleBlur} />
+                            <input type='text' placeholder='Brand day offer' id='brand_day_offer' name='brand_day_offer' onChange={handleChange} value={values.brand_day_offer || ''} onBlur={handleBlur} />
                         </div>
                         <div className='BrandType'>
-
-                            {/* <ThemeProvider theme={theme}> */}
                             <label htmlFor="type">Type</label>
-                            <CustomSelect name='type' value={values.type} id='type' onBlur={handleBlur} onChange={handleChange} fullWidth sx={{ fontSize: "1.3rem", borderRadius: "1rem" }}>
+                            <CustomSelect name='type' value={values.type || ''} id='type' onBlur={handleBlur} onChange={handleChange} fullWidth sx={{ fontSize: "1.3rem", borderRadius: "1rem" }}>
                                 <CustomMenuItem sx={{ fontSize: "1.3rem", backgroundColor: "grey !important", }}>---/Select/---</CustomMenuItem>
                                 {types.map(({ value, label }, index) => {
                                     return (
@@ -176,8 +177,7 @@ export const BrandDetailsModal = ({ setReload, reload, brandEditData, setBrandEd
                                 display: "flex",
                                 gap: "1rem",
                                 justifyContent: "flex-end",
-                            }}
-                        >
+                            }}>
 
                             <Button
                                 variant="outlined"

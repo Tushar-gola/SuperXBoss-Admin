@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-const-assign */
 import React, { useEffect, useState } from "react";
 import { Box, Modal, Stack, Button } from "@mui/material";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import Styles from '../../../pages/style.module.css'
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
 import { CategoryValidate } from '../../../schemas'
+import { isAppendRow } from '../../../functions'
 export const Addcatagories = (_props) => {
-    const { editRowData, setEditRowData, catRowSingleData, setCatRowSingleData, reload, setReload } = _props;
+    const { editRowData, setEditRowData, catRowSingleData, setCatRowSingleData, setCatagriesDataRetrive } = _props;
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);;
     const dispatch = useDispatch();
@@ -24,29 +24,16 @@ export const Addcatagories = (_props) => {
         setCatRowSingleData(false);
     };
 
-    useEffect(() => {
-        const handleKeyPress = (event) => {
-            if (event.ctrlKey && event.key === '*') {
-                event.preventDefault()
-                handleOpen();
-            }
-        };
-        window.addEventListener('keyup', handleKeyPress);
-        return () => {
-            window.addEventListener('keyup', handleKeyPress);
-        }
-    }, []);
-
     const onUserSubmit = async (values) => {
         dispatch(openLoader(true));
         let AxiosFetch
         if (catRowSingleData) {
             AxiosFetch = await AxiosFetchMethod({
-                url: `${process.env.REACT_APP_BASE_URL}/api/update/editCategory`,
+                url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-Category`,
                 method: "put",
                 data: values,
                 headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-            }); catRowSingleData = null
+            }); setCatRowSingleData(null)
         }
         else {
             AxiosFetch = await AxiosFetchMethod({
@@ -61,10 +48,10 @@ export const Addcatagories = (_props) => {
         } else {
             if (AxiosFetch.type === "success") {
                 dispatch(openLoader(false));
+                isAppendRow(setCatagriesDataRetrive, AxiosFetch.data)
                 values.name = ""
                 values.description = ""
                 handleClose()
-                setReload(!reload)
             }
         }
     }
@@ -80,8 +67,6 @@ export const Addcatagories = (_props) => {
                 onUserSubmit(values)
             },
         });
-    // Q6wxtfZpwcRRR
-
     useEffect(() => {
         if (catRowSingleData) {
             setValues({ name: catRowSingleData?.name, description: catRowSingleData?.description, catId: catRowSingleData?.id })
@@ -91,6 +76,19 @@ export const Addcatagories = (_props) => {
     useEffect(() => {
         setOpen(editRowData)
     }, [editRowData])
+
+    useEffect(() => {
+        const handleKeyPress = (event) => {
+            if (event.ctrlKey && event.key === '*') {
+                event.preventDefault()
+                handleOpen();
+            }
+        };
+        window.addEventListener('keyup', handleKeyPress);
+        return () => {
+            window.addEventListener('keyup', handleKeyPress);
+        }
+    }, []);
 
     return (
         <>
@@ -132,7 +130,7 @@ export const Addcatagories = (_props) => {
                                 placeholder="Name"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.name} />
+                                value={values.name || ''} />
                             <div className='yup-error' >
                                 {errors.name && touched.name ? <span className='err'>{errors.name}</span> : null}
                             </div>
@@ -146,7 +144,7 @@ export const Addcatagories = (_props) => {
                                 placeholder="Description"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.description}
+                                value={values.description || ''}
                             />
                         </div>
                         <div

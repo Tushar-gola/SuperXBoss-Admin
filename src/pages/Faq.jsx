@@ -5,7 +5,7 @@ import { Box, Grid, Button, Switch, FormControlLabel } from '@mui/material';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import {AxiosFetchMethod, RetrieveData} from "../utils";
+import { AxiosFetchMethod, RetrieveData } from "../utils";
 import MuiAccordion from '@mui/material/Accordion';
 import Typography from '@mui/material/Typography';
 import SendIcon from '@mui/icons-material/Send';
@@ -13,6 +13,7 @@ import { openLoader } from "../actions/index";
 import { styled } from '@mui/material/styles';
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
+import { isAppendRow } from '../functions';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
@@ -92,7 +93,7 @@ export const Faq = () => {
 
     useEffect(() => {
         FaqRetrieve()
-    }, [reload])
+    }, [])
 
 
     const { handleBlur, handleSubmit, handleChange, values, setValues } =
@@ -122,12 +123,11 @@ export const Faq = () => {
                 if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
                     dispatch(openLoader(false));
                 } else {
-
                     if (AxiosFetch.type === "success") {
                         dispatch(openLoader(false));
+                        isAppendRow(setFaq, AxiosFetch.data)
                         values.question = ""
                         values.answer = ""
-                        setReload(!reload)
                     }
                 }
             },
@@ -158,9 +158,10 @@ export const Faq = () => {
             data: { id: id, status: status },
             headers: { Authorization: brToken },
         });
+        console.log(data);
         if (data) {
             dispatch(openLoader(false));
-            setReload(!reload);
+            isAppendRow(setFaq, data.data)
         }
     };
 
@@ -180,7 +181,7 @@ export const Faq = () => {
                                 placeholder="Question"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.question} />
+                                value={values.question || ''} />
                         </Grid>
 
                         <Grid item xs={5}>
@@ -193,17 +194,13 @@ export const Faq = () => {
                                 placeholder="Answer"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.answer} />
+                                value={values.answer || ''} />
 
                         </Grid>
                         <Grid item xs={2}>
-                            <Button variant="contained" className="btn_main" sx={{ marginTop: "2.5rem", marginLeft: "1rem" }} type="submit" endIcon={<SendIcon />}>
-                                {/* Submit */}
-                            </Button>
-                            {/* </div> */}
+                            <Button variant="contained" className="btn_main" sx={{ marginTop: "2.5rem", marginLeft: "1rem" }} type="submit" endIcon={<SendIcon />}></Button>
                         </Grid>
                     </Grid>
-
                 </form>
             </Box>
 
@@ -241,10 +238,7 @@ export const Faq = () => {
 
                             </Accordion>
                         )
-                    })
-
-
-                }
+                    })}
             </Box >
 
         </>

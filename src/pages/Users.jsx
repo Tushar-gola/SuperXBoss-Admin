@@ -4,13 +4,14 @@ import * as React from "react";
 import { Grid, Box, FormControlLabel, Switch, Menu, MenuItem } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import {RetrieveData, AxiosFetchMethod} from "../utils";
+import { RetrieveData, AxiosFetchMethod } from "../utils";
 import { openLoader } from "../actions/index";
 import { useDispatch } from "react-redux";
-import {CustomTable} from "../helpers";
+import { CustomTable } from "../helpers";
 import moment from "moment/moment";
-import {UserCreate, AssignPermission} from "../components";
+import { UserCreate, AssignPermission } from "../components";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { isAppendRow } from "../functions";
 export const Users = () => {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -66,7 +67,7 @@ export const Users = () => {
       renderCell: (parms) => {
         return (
           <button className="modalImgBtn">
-            <img src={`${process.env.REACT_APP_BASE_URL}/upload/user/${parms?.profile_picture}`} alt='_blank'/>
+            <img src={`${process.env.REACT_APP_BASE_URL}/upload/user/${parms?.profile_picture}`} alt='_blank' />
           </button>
         );
       },
@@ -125,12 +126,8 @@ export const Users = () => {
             </Tooltip>
             <Menu
               id="long-menu"
-              MenuListProps={{
-                'aria-labelledby': 'long-button',
-              }}
               anchorEl={anchorEl}
               open={open}
-
               onClose={handleClose}
               PaperProps={{
                 style: {
@@ -162,7 +159,6 @@ export const Users = () => {
   };
 
   const userDataRetreive = async () => {
-
     dispatch(openLoader(true))
     let {
       data
@@ -182,13 +178,13 @@ export const Users = () => {
   const userActInativ = async (id, status) => {
     dispatch(openLoader(true));
     let AxiosFetch = await AxiosFetchMethod({
-      url: `${process.env.REACT_APP_BASE_URL}/api/update/user-status-update`,
+      url: `${process.env.REACT_APP_BASE_URL}/api/update/user-details-update`,
       method: "put",
-      data: { id: id, statusId: status },
+      data: { id, status },
       headers: { Authorization: brToken },
     });
     if (AxiosFetch.type === "success") {
-      setReload(!reload);
+      isAppendRow(setUserData, AxiosFetch.data)
       dispatch(openLoader(false));
     } else if (AxiosFetch.type === "error") {
       dispatch(openLoader(false));
@@ -201,7 +197,7 @@ export const Users = () => {
       <Box sx={{ flexGrow: 1, px: "2.8rem" }}>
         <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
           <Grid item xs={4}>
-            <UserCreate editModalOpen={editModalOpen} closeEditModal={() => setEditModalOpen(false)} id={userId} userEditData={editUserData} reload={reload} setReload={setReload} setEditUserData={setEditUserData} />
+            <UserCreate editModalOpen={editModalOpen} closeEditModal={() => setEditModalOpen(false)} id={userId} userEditData={editUserData} reload={reload} setReload={setReload} setEditUserData={setEditUserData} setUserData={setUserData} />
           </Grid>
         </Grid>
       </Box>

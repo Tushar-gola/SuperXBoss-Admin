@@ -51,7 +51,7 @@ export const Banner = () => {
             <Box sx={{ flexGrow: 1, px: "2.8rem" }}>
                 <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
                     <Grid item xs={3}>
-                        <BannerModal reload={reload} setReload={setReload} />
+                        <BannerModal setBannerData={setBannerData} />
                     </Grid>
                 </Grid>
             </Box>

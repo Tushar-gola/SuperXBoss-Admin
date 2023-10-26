@@ -6,10 +6,11 @@ import Box from "@mui/material/Box";
 import UploadIcon from "../../../images/icons8-upload-to-the-cloud-50.png";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import Styles from '../../../pages/style.module.css'
 import SendIcon from '@mui/icons-material/Send';
-export const ImageModal = ({ modalOpen, modalClose, catUserId, reload, setReload }) => {
+import { isAppendRow } from '../../../functions';
+export const ImageModal = ({ modalOpen, modalClose, catUserId, setCatagriesDataRetrive }) => {
     const dispatch = useDispatch();
     let token = localStorage.getItem("token");
     let brToken = `Bearer ${token}`;
@@ -29,25 +30,19 @@ export const ImageModal = ({ modalOpen, modalClose, catUserId, reload, setReload
 
     const handleSubmit = (async (e) => {
         e.preventDefault();
-
         let formData = new FormData();
-
         formData.append('image', currentCatData.catagorniesImage)
-
         formData.append('id', currentCatData.catId)
-
         dispatch(openLoader(true));
-
         let AxiosFetch = await AxiosFetchMethod({
             url: `${process.env.REACT_APP_BASE_URL}/api/update/categoryImageUpload`,
             method: "put",
             data: formData,
             headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
         });
-
         if (AxiosFetch?.type === "success") {
             dispatch(openLoader(false));
-            setReload(!reload)
+            isAppendRow(setCatagriesDataRetrive, AxiosFetch.data)
             UpdateCatData({
                 ...currentCatData,
                 Url: '',

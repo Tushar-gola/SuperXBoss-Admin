@@ -16,6 +16,7 @@ const sty1 = {
     padding: "1.5rem 0"
 }
 export const CustomTable = ({ rowData, columns, totalPages, handleChangeRowsPerPage, page, setPage, rowsPerPage, orderSty }) => {
+    console.log(rowData?.length);
     return (
         <>
             <Paper sx={{ overflow: 'hidden', px: '2.4rem', mt: '1.5rem', mb: '5.574rem' }}>
@@ -45,7 +46,7 @@ export const CustomTable = ({ rowData, columns, totalPages, handleChangeRowsPerP
                         </TableHead>
 
                         <TableBody>
-                            {rowData?.length > 0 ? rowData?.map((row, index) => {
+                            {rowData?.map((row, index) => {
                                 return (
                                     <TableRow key={row.id}>
                                         {columns?.map((column) => {
@@ -61,9 +62,10 @@ export const CustomTable = ({ rowData, columns, totalPages, handleChangeRowsPerP
                                         })}
                                     </TableRow>
                                 );
-                            }) : <TableRow><TableCell><h1>Data is not available ..........</h1></TableCell></TableRow>}
+                            })}
                         </TableBody>
                     </Table>
+                    {rowData.length === 0 ? <h2>Data is not available..........</h2> : null}
                 </TableContainer>
 
                 <TablePagination

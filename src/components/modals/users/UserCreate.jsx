@@ -4,15 +4,15 @@ import { Stack, Button, Modal, Box, Grid, FormControl, InputLabel, Select, MenuI
 import AddIcon from '@mui/icons-material/Add';
 import Styles from '../../../pages/style.module.css'
 import { useFormik } from "formik";
-import {AxiosFetchMethod, RetrieveData} from "../../../utils";
+import { AxiosFetchMethod, RetrieveData } from "../../../utils";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import SendIcon from '@mui/icons-material/Send';
+import { isAppendRow } from '../../../functions';
 
-export const UserCreate =({ editModalOpen, closeEditModal, id, userEditData, reload, setReload, setEditUserData }) => {
-    console.log(userEditData, "lllllllllllll");
+export const UserCreate = ({ editModalOpen, setUserData, closeEditModal, id, userEditData, reload, setReload, setEditUserData }) => {
     const [open, setOpen] = useState(false);
     const [role, setRole] = useState('');
     const [roleName, setRoleName] = useState([])
@@ -59,47 +59,43 @@ export const UserCreate =({ editModalOpen, closeEditModal, id, userEditData, rel
                 address: "",
                 password: "!@#$%^&*",
             },
-            onSubmit: async (values) => {
-                console.log(values, "mmmmmmmmmmmm");
+            onSubmit: async (values, action) => {
                 dispatch(openLoader(true));
                 values.role = role;
-                let AxiosFetch
-                if (userEditData) {
-                    AxiosFetch = await AxiosFetchMethod(
-                        {
-                            url: `${process.env.REACT_APP_BASE_URL}/api/update/user-details-update`,
-                            method: "put",
-                            data: values,
-                            headers: { Authorization: brToken },
-                        });
-                    userEditData = null
 
-                } else {
+                const url = userEditData
+                    ? `${process.env.REACT_APP_BASE_URL}/api/update/user-details-update`
+                    : `${process.env.REACT_APP_BASE_URL}/api/create/user-create`;
 
-                    AxiosFetch = await AxiosFetchMethod(
-                        {
-                            url: `${process.env.REACT_APP_BASE_URL}/api/create/user-create`,
-                            method: "post",
-                            data: values,
-                            headers: { Authorization: brToken },
-                        });
+                const method = userEditData ? "put" : "post";
+                const data = { id, ...values };
 
-                }
+                try {
+                    const AxiosFetch = await AxiosFetchMethod({
+                        url,
+                        method,
+                        data,
+                        headers: { Authorization: brToken },
+                    });
 
-                if (AxiosFetch?.response?.data.type === "error") {
-                    dispatch(openLoader(false));
-                } else {
+                    if (AxiosFetch?.response?.data.type === "error") return dispatch(openLoader(false));
                     if (AxiosFetch.type === "success") {
+                        isAppendRow(setUserData, AxiosFetch.data);
                         dispatch(openLoader(false));
-                        values.name = ''
-                        values.address = ''
-                        values.email = ""
-                        values.role = ""
-                        values.whats_app = ""
-                        values.mobile = ""
-                        handleClose()
-                        setReload(!reload)
+                        setValues({
+                            name: '',
+                            address: '',
+                            email: '',
+                            role: '',
+                            whats_app: '',
+                            mobile: '',
+                        });
+                        handleClose();
+                        setReload(!reload);
                     }
+                } catch (error) {
+                    console.error("Error:", error);
+                    dispatch(openLoader(false));
                 }
             }
         })
@@ -158,6 +154,7 @@ export const UserCreate =({ editModalOpen, closeEditModal, id, userEditData, rel
                                 <input
                                     type="text"
                                     name="name"
+
                                     placeholder="Name"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -221,8 +218,8 @@ export const UserCreate =({ editModalOpen, closeEditModal, id, userEditData, rel
                                         type={eyeToggle ? "password" : "type"}
                                         name="password"
                                         placeholder="password"
-                                        onChange={handleChange} 
-                                        
+                                        onChange={handleChange}
+                                        autoComplete={'current-password'}
                                         onBlur={handleBlur}
                                         value={values.password}
                                         disabled={userEditData ? true : false}
