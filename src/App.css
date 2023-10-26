@@ -138,9 +138,7 @@ main {
 }
 
 @import "../src/styles/Signin.css";
-
 @import '../src/styles/Footer.css';
-
 @import '../src/styles/Header.css';
 @import '../src/styles/Loader.css';
 
@@ -785,7 +783,6 @@ main {
 
 .err {
   color: red;
-  /* height: 1rem; */
   font-size: 1.2rem;
   letter-spacing: .1rem;
 }
@@ -797,23 +794,15 @@ main {
   display: flex;
   justify-content: end;
 }
-
-
-/* **************************************** */
-/*  */
-
-
 .container {
   justify-content: center;
   align-items: center;
   display: flex;
   height: 280px;
   padding: 0 2rem;
-  /* background-color: #dc143c; */
 }
 
 .card {
-  /* width: 400px; */
   height: 220px;
   border-radius: 5px;
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
@@ -821,7 +810,6 @@ main {
   background: radial-gradient(circle, rgba(0, 0, 0, 0.074) 0%, rgba(219, 58, 40, 0.479) 100%);
   padding: 20px 20px;
   position: relative;
-  /* background-color: radial-gradient(circle, rgba(0, 0, 0, 0.074) 0%, rgb(108, 172, 245) 100%); */
   transition: .4s ease-in-out;
 }
 
@@ -835,10 +823,8 @@ main {
   border-radius: 5px;
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
   background: rgba(29, 216, 160, 0.297);
-  /* background: radial-gradient(circle, rgba(0, 0, 0, 0.074) 0%, rgba(219, 58, 40, 0.479) 100%); */
   padding: 20px 10px;
   position: relative;
-  /* background-color: radial-gradient(circle, rgba(0, 0, 0, 0.074) 0%, rgb(108, 172, 245) 100%); */
   transition: .4s ease-in-out;
 }
 

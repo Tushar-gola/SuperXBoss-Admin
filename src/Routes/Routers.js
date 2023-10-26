@@ -1,32 +1,10 @@
 import React from 'react'
-import SignIn from '../pages/SignIn';
-import Dashboard from '../pages/Dashboard';
-import {
-    Route, Routes
-} from "react-router-dom";
-import Categories from '../pages/Categories';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import SubCatagries from '../pages/SubCatagries';
-import Brands from '../pages/Brands';
-import Users from '../pages/Users';
-import ProtectedRoute from '../helpers/ProtectedRoute';
-import PublicRoute from '../helpers/PublicRoute';
+import { Route, Routes } from "react-router-dom";
+import { SignIn, Users, Categories, WalletOffer, Brands, Shipping, Vechiles, SubCategories, Banner, RolePermission, Coupon, Product, Customer, Dashboard, Faq, Information, Order, Notification } from '../pages';
+import { Header, Footer } from '../components';
+import { ProtectedRoute, PublicRoute } from '../helpers';
 import { Navigate } from 'react-router-dom';
-import Vechiles from '../pages/Vechiles';
-import Product from '../pages/Product';
-import RolePermission from '../pages/RolePermission';
-import Customer from '../pages/Customer';
-import Order from '../pages/Order';
-import Shipping from '../pages/Shipping';
-import Notification from '../pages/Notification';
-import Coupon from '../pages/Coupon';
-import WalletOffer from '../pages/WalletOffer';
-import Information from '../pages/Information';
-import Banner from '../pages/Banner';
-import Faq from '../pages/Faq';
-
-export default function Routers() {
+export const Routers = () => {
     return (
         <>
             <Routes>
@@ -39,7 +17,7 @@ export default function Routers() {
                         <Route path='/' element={<Navigate replace to="/dashboard" />} />
                         <Route path='/dashboard' element={<Dashboard />} />
                         <Route path='/categories' element={<Categories />} />
-                        <Route path="/categories/sub-categories/:id" element={<SubCatagries />} />
+                        <Route path="/categories/sub-categories/:id" element={<SubCategories />} />
                         <Route path="/brands" element={<Brands />} />
                         <Route path="/users" element={<Users />} />
                         <Route path="/vehicle" element={<Vechiles />} />

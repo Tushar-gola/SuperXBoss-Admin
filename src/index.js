@@ -38,7 +38,7 @@ const theme = createTheme({
 });
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
@@ -46,7 +46,7 @@ root.render(
         </ThemeProvider>
       </Provider>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 
 );
 

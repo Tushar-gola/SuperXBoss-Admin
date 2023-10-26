@@ -15,31 +15,19 @@ const style = {
 
 };
 
-
-
-export default function IsOnlinePopup() {
-
-
+export const IsOnlinePopup = () => {
     return (
-        <div>
-            <Modal
-                open={true}
-                // onClose={handleClose}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{ ...style, width: 600 }}>
-                    {/* <h2 id="parent-modal-title">Network connection</h2> */}
-                    <Alert severity="warning" sx={{ fontSize: "1.4rem", height: "100%" }}>
-                        <AlertTitle sx={{ fontSize: "2rem" }}>Warning - Network connection</AlertTitle>
-                        Your network connection is down. — <strong>Please check your internet connection.!</strong>
-                    </Alert>
-                    {/* <p id="parent-modal-description">
-                        Your network connection is down. Please check your internet connection.
-                    </p> */}
-                    {/* <ChildModal /> */}
-                </Box>
-            </Modal>
-        </div>
+        <Modal
+            open={true}
+            aria-labelledby="parent-modal-title"
+            aria-describedby="parent-modal-description"
+        >
+            <Box sx={{ ...style, width: 600 }}>
+                <Alert severity="warning" sx={{ fontSize: "1.4rem", height: "100%" }}>
+                    <AlertTitle sx={{ fontSize: "2rem" }}>Warning - Network connection</AlertTitle>
+                    Your network connection is down. — <strong>Please check your internet connection.!</strong>
+                </Alert>
+            </Box>
+        </Modal>
     );
 }

@@ -1,25 +1,19 @@
 import React from 'react'
 import './App.css';
-import Routers from '../src/Routes/Routers';
-import Loader from '../src/components/Loader';
+import { Routers } from './Routes';
+import { Loader } from './components';
 import { useSelector } from 'react-redux'
 import Button from '@mui/material/Button';
 import { SnackbarProvider } from 'notistack';
-import IsOnlinePopup from "../src/utils/IsOnlinePopup"
+import {IsOnlinePopup} from "./utils"
 function App() {
   const mySt̥ate = useSelector((state) => state.loaderWorking)
   const snackbarProvider = React.useRef();
-
-
-
   const [isOnline, setIsOnline] = React.useState(navigator.onLine);
 
   React.useEffect(() => {
-    // Add event listeners for online and offline events
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-
-    // Clean up event listeners when the component unmounts
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -40,15 +34,8 @@ function App() {
 
   return (
     <>
-      {
-        mySt̥ate ?
-          <Loader />
-          : null
-      }
-
-      {
-        !isOnline ? <IsOnlinePopup /> : null
-      }
+      {mySt̥ate ? <Loader /> : null}
+      {!isOnline ? <IsOnlinePopup /> : null}
       <SnackbarProvider
         ref={snackbarProvider}
         anchorOrgin={{ horizontal: "center", vertical: "bottom" }}
