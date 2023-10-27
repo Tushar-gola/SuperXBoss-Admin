@@ -12,8 +12,6 @@ import { RetrieveData } from "../utils";
 
 export const MultiSelectUser = ({ userDataId, setUserDataId }) => {
     const [userData, setUserData] = React.useState([])
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     React.useEffect(() => {
         userDataRetrieve()
     }, [])
@@ -23,7 +21,6 @@ export const MultiSelectUser = ({ userDataId, setUserDataId }) => {
         } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/customer-retrieve`,
-            headers: { Authorization: brToken },
         });
         if (data) {
             setUserData(data);

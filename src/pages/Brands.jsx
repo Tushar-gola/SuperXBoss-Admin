@@ -18,15 +18,12 @@ export const Brands = () => {
     const [modalImage, setModalImage] = useState(false)
     const [brandData, setBrandData] = useState([])
     const [totalPages, setTotalPages] = useState(0)
-    const [reload, setReload] = useState(false)
     const user = JSON.parse(localStorage.getItem('user'))
     const [brandEditData, setBrandEditData] = useState(null)
     const [brandEditModalOpen, setBrandEditModalOpen] = useState(false)
     const [brandId, setBrandId] = useState(null)
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
@@ -135,7 +132,6 @@ export const Brands = () => {
             const { data } = await RetrieveData({
                 method: "get",
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/main-brands-retrieve`,
-                headers: { Authorization: brToken },
                 params: { page, limit: rowsPerPage }
             });
             if (data) {
@@ -155,7 +151,6 @@ export const Brands = () => {
             const { data } = await RetrieveData({
                 method: "get",
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-brand-panel`,
-                headers: { Authorization: brToken },
                 params: { page, limit: rowsPerPage, value: value[0] }
             });
             if (data) {
@@ -185,7 +180,6 @@ export const Brands = () => {
                 url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-brand`,
                 method: "put",
                 data: { brandId: id, ...data },
-                headers: { Authorization: brToken },
             });
             if (response) {
                 isAppendRow(setBrandData, response.data);
@@ -237,12 +231,7 @@ export const Brands = () => {
                 setPage={setPage}
                 rowsPerPage={rowsPerPage}
             />
-
-
-
-            {/* Modal */}
-
-            <BrandImageModal modalOpen={modalImage} modalClose={() => setModalImage(false)} brandId={brandId} reload={reload} setReload={setReload} />
+            <BrandImageModal modalOpen={modalImage} modalClose={() => setModalImage(false)} brandId={brandId} />
 
 
         </>

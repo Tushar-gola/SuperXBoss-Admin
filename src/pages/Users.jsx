@@ -16,15 +16,12 @@ export const Users = () => {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [totalPages, setTotalPages] = React.useState(null);
-  const [reload, setReload] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
   const [userId, setUserId] = React.useState()
   const [editUserData, setEditUserData] = React.useState()
   const [editModalOpen, setEditModalOpen] = React.useState(false)
   const [assignPermission, setAssignPermission] = React.useState(false)
   const dispatch = useDispatch();
-  let token = localStorage.getItem("token");
-  let brToken = `Bearer ${token}`;
   const ITEM_HEIGHT = 25;
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -36,7 +33,7 @@ export const Users = () => {
     } catch (e) {
       console.log(e.message, "user page");
     }
-  }, [rowsPerPage, page, reload]);
+  }, [rowsPerPage, page]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -165,7 +162,6 @@ export const Users = () => {
     } = await RetrieveData({
       method: "get",
       url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/retrieve-user`,
-      headers: { Authorization: brToken },
       params: { page, limit: rowsPerPage },
     });
     if (data) {
@@ -181,7 +177,6 @@ export const Users = () => {
       url: `${process.env.REACT_APP_BASE_URL}/api/update/user-details-update`,
       method: "put",
       data: { id, status },
-      headers: { Authorization: brToken },
     });
     if (AxiosFetch.type === "success") {
       isAppendRow(setUserData, AxiosFetch.data)
@@ -197,7 +192,7 @@ export const Users = () => {
       <Box sx={{ flexGrow: 1, px: "2.8rem" }}>
         <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
           <Grid item xs={4}>
-            <UserCreate editModalOpen={editModalOpen} closeEditModal={() => setEditModalOpen(false)} id={userId} userEditData={editUserData} reload={reload} setReload={setReload} setEditUserData={setEditUserData} setUserData={setUserData} />
+            <UserCreate editModalOpen={editModalOpen} closeEditModal={() => setEditModalOpen(false)} id={userId} userEditData={editUserData} setEditUserData={setEditUserData} setUserData={setUserData} />
           </Grid>
         </Grid>
       </Box>

@@ -80,11 +80,8 @@ const AccordionSummary = styled((props) => (
 }));
 export const Faq = () => {
     const [expanded, setExpanded] = React.useState('panel1');
-    const [reload, setReload] = useState(false)
     const [editFaq, setEditFaq] = useState()
-    const [faq, setFaq] = useState([])
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
+    const [faq, setFaq] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -110,14 +107,12 @@ export const Faq = () => {
                         url: `${process.env.REACT_APP_BASE_URL}/api/update/faqs-update`,
                         method: "put",
                         data: values,
-                        headers: { Authorization: brToken },
                     }); setEditFaq(null)
                 } else {
                     AxiosFetch = await AxiosFetchMethod({
                         url: `${process.env.REACT_APP_BASE_URL}/api/create/faqs-create`,
                         method: "post",
                         data: values,
-                        headers: { Authorization: brToken },
                     });
                 }
                 if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
@@ -142,7 +137,6 @@ export const Faq = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/faqs-retrieve`,
-            headers: { Authorization: brToken },
         });
         if (data) {
             setFaq(data)
@@ -156,7 +150,6 @@ export const Faq = () => {
             url: `${process.env.REACT_APP_BASE_URL}/api/update/faqs-update`,
             method: "put",
             data: { id: id, status: status },
-            headers: { Authorization: brToken },
         });
         console.log(data);
         if (data) {

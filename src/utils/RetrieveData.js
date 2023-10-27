@@ -3,8 +3,10 @@ import React from 'react';
 import { enqueueSnackbar } from 'notistack'
 import { Navigate } from 'react-router-dom'
 export const RetrieveData = async (options) => {
+    let token = localStorage.getItem("token");
+    let brToken = `Bearer ${token}`;
     return await axios({
-        ...options
+        ...options, headers: { "Content-Type": "multipart/form-data", Authorization: brToken }
     }).then((responses) => {
         console.log(responses.message);
         return responses?.data
@@ -14,7 +16,7 @@ export const RetrieveData = async (options) => {
             localStorage.clear()
             window.location.reload();
         }
-        if(error.message === 'Network Error'){
+        if (error.message === 'Network Error') {
             enqueueSnackbar(error.message, { variant: "error" })
         }
 

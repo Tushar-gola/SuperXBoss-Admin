@@ -18,8 +18,6 @@ export const BannerModal = ({ setBannerData }) => {
         setOpen(false);
     };
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const [bannerImage, setBannerImage] = React.useState({
         banner_image: "",
         Url: ''
@@ -31,36 +29,28 @@ export const BannerModal = ({ setBannerData }) => {
 
     const { handleSubmit } =
         useFormik({
-            initialValues: {
-
-            },
+            initialValues: {},
             onSubmit: async (val̥ues) => {
                 dispatch(openLoader(true));
                 let formData = new FormData();
-
                 formData.append('image', bannerImage.banner_image)
-
                 const AxiosFetch = await AxiosFetchMethod({
                     url: `${process.env.REACT_APP_BASE_URL}/api/create/banner-create`,
                     method: "post",
                     data: formData,
-                    headers: { Authorization: brToken },
-                });
+                }, { "Content-Type": "multipart/form-data" });
 
-                if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
+                if (AxiosFetch.type === "success") {
+                    isAppendRow(setBannerData, AxiosFetch.data)
                     dispatch(openLoader(false));
+                    setBannerImage({
+                        ...bannerImage,
+                        Url: '',
+                        banner_image: ""
+                    })
+                    handleClose()
                 } else {
-
-                    if (AxiosFetch.type === "success") {
-                        isAppendRow(setBannerData, AxiosFetch.data)
-                        dispatch(openLoader(false));
-                        setBannerImage({
-                            ...bannerImage,
-                            Url: '',
-                            banner_image: ""
-                        })
-                        handleClose()
-                    }
+                    dispatch(openLoader(false));
                 }
             },
         });

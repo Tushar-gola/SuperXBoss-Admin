@@ -15,8 +15,6 @@ export const ShippingModal = ({ reload, setReload, editData, modalOpen, modalClo
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const handleClose = () => {
         setOpen(false)
         modalClose()
@@ -60,7 +58,6 @@ export const ShippingModal = ({ reload, setReload, editData, modalOpen, modalClo
                     url: `${process.env.REACT_APP_BASE_URL}/api/update/shipping-state-update`,
                     method: "put",
                     data: values,
-                    headers: { Authorization: brToken }
                 })
                 editData = null
             } else {
@@ -68,7 +65,6 @@ export const ShippingModal = ({ reload, setReload, editData, modalOpen, modalClo
                     url: `${process.env.REACT_APP_BASE_URL}/api/create/shipping-state-create`,
                     method: "post",
                     data: values,
-                    headers: { Authorization: brToken }
                 })
             }
 

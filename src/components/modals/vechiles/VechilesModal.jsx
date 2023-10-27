@@ -4,7 +4,7 @@ import { Box, Modal, Stack, Button } from "@mui/material";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import Styles from '../../../pages/style.module.css'
 import AddIcon from '@mui/icons-material/Add';
 import { useLocation } from "react-router-dom";
@@ -20,8 +20,6 @@ export const VechilesModal = ({ reload, setReload, editRowData, setEditRowData, 
         setValues({})
         setRowSingleData(false);
     };
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
 
     const { handleBlur, handleSubmit, handleChange, values, setValues } =
         useFormik({
@@ -38,7 +36,6 @@ export const VechilesModal = ({ reload, setReload, editRowData, setEditRowData, 
                             url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-vehicle`,
                             method: "put",
                             data: values,
-                            headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
                         });
                     RowSingleData = null
 
@@ -47,20 +44,18 @@ export const VechilesModal = ({ reload, setReload, editRowData, setEditRowData, 
                         url: `${process.env.REACT_APP_BASE_URL}/api/create/vehicle-segments`,
                         method: "post",
                         data: { ...values, brand_id: location.state },
-                        headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
                     });
                 }
-                if (AxiosFetch?.response?.data.type === "error" || AxiosFetch?.type === "error") {
+                if (AxiosFetch.type === "success") {
                     dispatch(openLoader(false));
+                    values.name = ""
+                    values.description = ""
+                    handleClose()
+                    setReload(!reload)
                 } else {
-                    if (AxiosFetch.type === "success") {
-                        dispatch(openLoader(false));
-                        values.name = ""
-                        values.description = ""
-                        handleClose()
-                        setReload(!reload)
-                    }
+                    dispatch(openLoader(false));
                 }
+
             },
         });
 

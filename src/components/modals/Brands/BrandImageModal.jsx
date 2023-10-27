@@ -4,16 +4,12 @@ import { Button, Modal, Box } from "@mui/material";
 import UploadIcon from "../../../images/icons8-upload-to-the-cloud-50.png";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import SendIcon from '@mui/icons-material/Send';
 import Styles from '../../../pages/style.module.css'
-export const BrandImageModal = ({ modalOpen, modalClose, brandId, reload, setReload }) => {
+export const BrandImageModal = ({ modalOpen, modalClose, brandId }) => {
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
-    const maxSize = 800 * 1024; // 800kb in bytes
-
-    // const location = useLocation();
+    const maxSize = 800 * 1024;
     const [currentCatData, UpdateCatData] = useState({
         brandId: brandId,
         brandImage: "",
@@ -37,18 +33,16 @@ export const BrandImageModal = ({ modalOpen, modalClose, brandId, reload, setRel
             url: `${process.env.REACT_APP_BASE_URL}/api/update/brand-image-upload`,
             method: "put",
             data: formData,
-            headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-        });
+        }, { "Content-Type": "multipart/form-data" });
         if (AxiosFetch.type === "success") {
             dispatch(openLoader(false));
-            setReload(!reload)
             UpdateCatData({
                 ...currentCatData,
                 Url: '',
                 catagorniesImage: ""
             })
             modalClose();
-        } else if (AxiosFetch?.response?.data?.type === "error") {
+        } else {
             dispatch(openLoader(false));
         }
     })

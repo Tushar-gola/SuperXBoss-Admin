@@ -17,16 +17,13 @@ export const UserEditSlider = ({ open, onClose }) => {
     const [getProfileImage, setGetProfileImage] = React.useState({
         profileName: "",
         Url: ""
-    })
+    });
     const dispatch = useDispatch();
     const [userData, setUserData] = React.useState([])
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const userDataRetreive = async () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/login-user-retrieve`,
-            headers: { Authorization: brToken }
         });
         if (data) {
             setUserData(data);
@@ -65,7 +62,7 @@ export const UserEditSlider = ({ open, onClose }) => {
 
                     <button className='userImage' type='button'>
                         {
-                            !getProfileImage.profileName ? <img src={`${process.env.REACT_APP_BASE_URL}/upload/user/${userData?.profile_picture}`} alt='_blank' /> : <img src={getProfileImage.Url} alt='_blank'/>
+                            !getProfileImage.profileName ? <img src={`${process.env.REACT_APP_BASE_URL}/upload/user/${userData?.profile_picture}`} alt='_blank' /> : <img src={getProfileImage.Url} alt='_blank' />
                         }
                     </button>
 
@@ -141,25 +138,22 @@ export const UserEditSlider = ({ open, onClose }) => {
                     url: `${process.env.REACT_APP_BASE_URL}/api/update/user-details-update`,
                     method: "put",
                     data: formData,
-                    headers: { Authorization: brToken },
-                });
-                console.log(AxiosFetch?.response?.data.type);
-                if (AxiosFetch?.response?.data.type === "error") {
+                }, { "Content-Type": "multipart/form-data" });
+                if (AxiosFetch.type === "success") {
                     dispatch(openLoader(false));
+                    values.name = ''
+                    values.address = ''
+                    values.email = ""
+                    values.whats_app = ""
+                    values.mobile = ""
+                    getProfileImage.profileName = ""
+                    onClose()
+                    setReload(!reload)
+                    userDataRetreive()
                 } else {
-                    if (AxiosFetch.type === "success") {
-                        dispatch(openLoader(false));
-                        values.name = ''
-                        values.address = ''
-                        values.email = ""
-                        values.whats_app = ""
-                        values.mobile = ""
-                        getProfileImage.profileName = ""
-                        onClose()
-                        setReload(!reload)
-                        userDataRetreive()
-                    }
+                    dispatch(openLoader(false));
                 }
+
             }
         })
 

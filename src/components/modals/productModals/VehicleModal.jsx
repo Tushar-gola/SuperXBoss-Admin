@@ -23,8 +23,6 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
     const [disable, setDisable] = useState([])
     const [getBrandId, setGetBrandId] = useState()
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     let year = 1975;
     let date = new Date().getFullYear();
     let arrYear = []
@@ -73,9 +71,7 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
             const updatedValues = prevValues.map((pn) => {
                 if (pn.vehicle_id === id) {
                     found = true;
-                    // Check if 'value' is a string and split it if necessary
                     const newYears = typeof value === 'string' ? value.split(',') : value;
-
                     return {
                         ...pn,
                         years: newYears,
@@ -87,7 +83,6 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
             });
 
             if (!found) {
-                // If 'id' doesn't match any existing object, create a new one
                 updatedValues.push({
                     vehicle_id: id,
                     years: typeof value === 'string' ? value.split(',') : value,
@@ -114,34 +109,23 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
             const { data } = await RetrieveData({
                 method: "get",
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/selected-product-brand-vehicle?product_id=${id}`,
-                headers: { Authorization: brToken },
             });
             setChecked(JSON?.parse(data[0]?.vehicle_id) ?? [])
             const result = {};
-            // Iterate through the input data
             data?.vehicleYear?.forEach((item) => {
                 const { vehicle_id, vehicle_year } = item;
-
-                // Check if the vehicle_id already exists in the result
                 if (result[vehicle_id]) {
-                    // If it exists, push the year to the 'years' array
                     result[vehicle_id].years.push(+vehicle_year);
                 } else {
-                    // If it doesn't exist, create a new entry with the 'years' array
                     result[vehicle_id] = { vehicle_id, years: [+vehicle_year] };
                 }
             });
-
-            // Convert the result object to an array
             const finalResult = Object.values(result);
             setPersonName(finalResult);
-
-
         } catch (e) {
             console.log(e);
         }
     }
-
     const { handleSubmit, setFieldValue } =
         useFormik({
             initialValues: {
@@ -152,7 +136,6 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
                     url: `${process.env.REACT_APP_BASE_URL}/api/create/product-list-brand-vehicle`,
                     method: "post",
                     data: { ...values, year: personName, brand_id: getBrandId },
-                    headers: { Authorization: brToken },
                 });
                 if (AxiosFetch?.response?.data.type === "error") {
                     dispatch(openLoader(false));
@@ -178,9 +161,7 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
                         <h2>Vehicle</h2>
                     </div>
                     <hr />
-                    <form className="catagories_form"
-                        onSubmit={handleSubmit}
-                    >
+                    <form className="catagories_form" onSubmit={handleSubmit} >
                         {data && data?.map(({ brandName, data }, index) => {
                             return (
                                 <Grid container spacing={1} key={index} >
@@ -233,7 +214,6 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
                                 </Grid>
                             )
                         })}
-                        {/* </Grid> */}
                         <div
                             className="modal_btn"
                             style={{
@@ -245,16 +225,13 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
                             <Button variant="contained" className="btn_main" type="submit">
                                 Submit
                             </Button>
-                            <Button
-                                variant="outlined"
+                            <Button variant="outlined"
                                 sx={{
                                     border: "2px solid #1B4B66",
                                     '&:hover': {
                                         border: "2px solid #1B4B66",
                                     }
-                                }}
-                                className="btn_main2"
-                            >
+                                }} className="btn_main2">
                                 Close
                             </Button>
                         </div>

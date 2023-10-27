@@ -45,8 +45,6 @@ export const Coupon = () => {
     const [couponModalOpen, setCouponModalOpen] = React.useState(false)
     const [couponData, setCouponData] = React.useState([])
     const [modaldata, setModaldata] = React.useState(null)
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const dispatch = useDispatch();
 
     const CouponCard = ({ item }) => {
@@ -103,7 +101,6 @@ export const Coupon = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/coupon-retrieve`,
-            headers: { Authorization: brToken },
         });
         if (data) {
             setCouponData(data)
@@ -117,7 +114,6 @@ export const Coupon = () => {
             url: `${process.env.REACT_APP_BASE_URL}/api/update/coupon-update`,
             method: "put",
             data: { id, status },
-            headers: { Authorization: brToken },
         });
         console.log(data);
         if (data) {
@@ -133,7 +129,6 @@ export const Coupon = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-coupon-panel`,
-            headers: { Authorization: brToken },
             params: { value: value[0] }
         });
         if (data) {

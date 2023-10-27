@@ -12,8 +12,6 @@ import SendIcon from '@mui/icons-material/Send';
 import { isAppendRow } from '../../../functions';
 export const ImageModal = ({ modalOpen, modalClose, catUserId, setCatagriesDataRetrive }) => {
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const [currentCatData, UpdateCatData] = useState({
         catId: catUserId,
         catagorniesImage: "",
@@ -38,8 +36,7 @@ export const ImageModal = ({ modalOpen, modalClose, catUserId, setCatagriesDataR
             url: `${process.env.REACT_APP_BASE_URL}/api/update/categoryImageUpload`,
             method: "put",
             data: formData,
-            headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-        });
+        }, { "Content-Type": "multipart/form-data" });
         if (AxiosFetch?.type === "success") {
             dispatch(openLoader(false));
             isAppendRow(setCatagriesDataRetrive, AxiosFetch.data)

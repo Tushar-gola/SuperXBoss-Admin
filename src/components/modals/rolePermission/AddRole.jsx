@@ -10,8 +10,6 @@ import { isAppendRow } from '../../../functions';
 export const AddRole = ({ setRoles }) => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const handleClose = () => {
         setOpen(false);
     };
@@ -39,7 +37,6 @@ export const AddRole = ({ setRoles }) => {
                     url: `${process.env.REACT_APP_BASE_URL}/api/create/role-create`,
                     method: "post",
                     data: values,
-                    headers: { Authorization: brToken },
                 });
                 if (AxiosFetch?.response?.data.type === "error") {
                     dispatch(openLoader(false));

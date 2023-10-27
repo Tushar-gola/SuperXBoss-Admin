@@ -3,14 +3,15 @@ import React, { useEffect } from 'react'
 import { Stack, Box, Modal, Button } from '@mui/material';
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import { openLoader } from "../../../actions/index";
 import { useParams } from "react-router-dom";
 import Styles from '../../../pages/style.module.css'
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
+import { isAppendRow } from '../../../functions';
 
-export const SubCataModal =({ reload, setReload, subCatEditData, editRowData, setEditRowData, setSubCatEditData }) => {
+export const SubCataModal = ({ setSubCatData, subCatEditData, editRowData, setEditRowData, setSubCatEditData }) => {
     const [open, setOpen] = React.useState(false);
     useEffect(() => {
         const handleKeyPress = (event) => {
@@ -20,7 +21,7 @@ export const SubCataModal =({ reload, setReload, subCatEditData, editRowData, se
             }
         };
         window.addEventListener('keyup', handleKeyPress);
-    }, []); // Empty dependency array means this effect runs only once
+    }, []); 
     let { id } = useParams();
 
     useEffect(() => {
@@ -41,8 +42,6 @@ export const SubCataModal =({ reload, setReload, subCatEditData, editRowData, se
         setSubCatEditData(null)
     };
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const { handleBlur, handleSubmit, handleChange, values, setValues } =
         useFormik({
             initialValues: {
@@ -50,38 +49,23 @@ export const SubCataModal =({ reload, setReload, subCatEditData, editRowData, se
                 description: "",
             },
             onSubmit: async (val̥ues) => {
-                let AxiosFetch;
-                dispatch(openLoader(true));
-                if (subCatEditData) {
-                    AxiosFetch = await AxiosFetchMethod(
-                        {
-                            url: `${process.env.REACT_APP_BASE_URL}/api/update/editCategory`,
-                            method: "put",
-                            data: values,
-                            headers: { Authorization: brToken },
-                        });
-                    subCatEditData = null
-                } else {
-                    AxiosFetch = await AxiosFetchMethod(
-                        {
-                            url: `${process.env.REACT_APP_BASE_URL}/api/create/create-sub-category`,
-                            method: "post",
-                            data: { ...values, parent: id, },
-                            headers: { Authorization: brToken },
-                        });
-                }
-                if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
+                const AxiosFetch = await AxiosFetchMethod({
+                    url: `${process.env.REACT_APP_BASE_URL}/api/${subCatEditData ? 'update/edit-category' : 'create/create-sub-category'}`,
+                    method: subCatEditData ? "put" : "post",
+                    data: subCatEditData ? values : { ...values, parent: id },
+                });
+
+                if (AxiosFetch?.type === "success") {
+                    setSubCatEditData(null);
                     dispatch(openLoader(false));
+                    isAppendRow(setSubCatData, AxiosFetch.data);
+                    values.name = "";
+                    values.description = "";
+                    handleClose();
                 } else {
-                    if (AxiosFetch?.type === "success") {
-                        dispatch(openLoader(false));
-                        values.name = ""
-                        values.description = ""
-                        handleClose()
-                        setReload(!reload)
-                    }
+                    dispatch(openLoader(false));
                 }
-            },
+            }
         });
 
 

@@ -18,8 +18,6 @@ export const Shipping =() => {
     const [shippingEditdata, setShippingEditdata] = useState()
     const dispatch = useDispatch();
     const [shipping, setShipping] = useState(null)
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
 
     useEffect(() => {
         ShippingDataRetrieve()
@@ -66,7 +64,6 @@ export const Shipping =() => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/shipping-state-retrieve`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage }
         });
 

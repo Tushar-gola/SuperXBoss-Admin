@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
-import {CatagoriesModal, VehicleModal, CreateProduct, BrandModal, SelectSearch, SearchField} from '../components';
+import { CatagoriesModal, VehicleModal, CreateProduct, BrandModal, SelectSearch, SearchField } from '../components';
 import { Grid, Box, Menu, MenuItem, Tooltip } from '@mui/material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
-import {CustomTable} from "../helpers";
-import {RetrieveData, AxiosFetchMethod} from '../utils';
+import { CustomTable } from "../helpers";
+import { RetrieveData, AxiosFetchMethod } from '../utils';
 import { openLoader } from "../actions/index";
 import { useDispatch } from "react-redux";
 import moment from "moment/moment";
@@ -31,8 +31,6 @@ export const Product = () => {
     const [anchorEl, setAnchorEl] = React.useState(null)
     const open = Boolean(anchorEl);
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
 
     useEffect(() => {
         productRetrieve()
@@ -69,7 +67,6 @@ export const Product = () => {
             const response = await RetrieveData({
                 method: "get",
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-product-panel`,
-                headers: { Authorization: brToken },
                 params: { page, limit: rowsPerPage, value: value[0] }
             });
 
@@ -105,7 +102,7 @@ export const Product = () => {
             renderCell: (parms) => {
                 return (
                     <button className="modalImgBtn">
-                        <img src={`${process.env.REACT_APP_BASE_URL}/upload/products/${parms.productImage[0]?.product_image}`}  alt='_blank'/>
+                        <img src={`${process.env.REACT_APP_BASE_URL}/upload/products/${parms.productImage[0]?.product_image}`} alt='_blank' />
                     </button>
                 );
             },
@@ -245,7 +242,6 @@ export const Product = () => {
             const response = await RetrieveData({
                 method: "get",
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/product-retrieve`,
-                headers: { Authorization: brToken },
                 params: { page, limit: rowsPerPage }
             });
             const { data } = response;
@@ -263,14 +259,12 @@ export const Product = () => {
         dispatch(openLoader(true));
         const apiUrl = `${process.env.REACT_APP_BASE_URL}/api/update/product-trend-status`;
         const requestData = { id, ...data };
-        const headers = { Authorization: brToken };
 
         try {
             const AxiosFetch = await AxiosFetchMethod({
                 url: apiUrl,
                 method: "put",
                 data: requestData,
-                headers,
             });
 
             if (AxiosFetch.type === "success") {
@@ -289,7 +283,6 @@ export const Product = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/vehicle-brand`,
-            headers: { Authorization: brToken },
         });
         setVehicleBrandData(data)
     }
@@ -298,7 +291,6 @@ export const Product = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/product-brand-vehicle?product_id=${productId}`,
-            headers: { Authorization: brToken },
         });
         setVehicleData(data)
     }

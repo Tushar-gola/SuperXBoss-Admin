@@ -15,8 +15,6 @@ import { useFormik } from "formik";
 export const Information = () => {
     const [reload, setReload] = useState(false)
     const [information, setInformation] = useState([])
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -38,7 +36,6 @@ export const Information = () => {
                     url: `${process.env.REACT_APP_BASE_URL}/api/update/rating-update`,
                     method: "put",
                     data: values,
-                    headers: { Authorization: brToken },
                 });
 
                 if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
@@ -67,7 +64,6 @@ export const Information = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/rating-retrieve`,
-            headers: { Authorization: brToken },
         });
         if (data) {
             setInformation(data)

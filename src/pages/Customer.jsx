@@ -14,9 +14,6 @@ export const Customer = () => {
     const [reload, setReload] = React.useState();
     const [userData, setUserData] = React.useState([]);
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
-
     React.useEffect(() => {
         try {
             userDataRetreive();
@@ -106,7 +103,6 @@ export const Customer = () => {
             method: "put",
             url: `${process.env.REACT_APP_BASE_URL}/api/update/customer-status-update`,
             data: { id, status },
-            headers: { Authorization: brToken },
         });
         if (data) {
             setReload(!reload)
@@ -123,7 +119,6 @@ export const Customer = () => {
         } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/customer-retrieve`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage },
         });
         if (data) {
@@ -139,7 +134,6 @@ export const Customer = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-customer-panel`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage, value: value[0] }
         });
         if (data) {

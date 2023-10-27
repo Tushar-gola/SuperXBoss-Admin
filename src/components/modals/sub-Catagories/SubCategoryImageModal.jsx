@@ -7,9 +7,7 @@ import { openLoader } from "../../../actions/index";
 import {AxiosFetchMethod} from "../../../utils";
 import Styles from '../../../pages/style.module.css'
 import SendIcon from '@mui/icons-material/Send';
-export const SubCategoryImageModal = ({ modalOpen, modalClose, catUserId, reload, setReload }) => {
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
+export const SubCategoryImageModal = ({ modalOpen, modalClose, catUserId }) => {
     const maxSize = 800 * 1024; // 800kb in bytes
 
     const dispatch = useDispatch();
@@ -36,18 +34,16 @@ export const SubCategoryImageModal = ({ modalOpen, modalClose, catUserId, reload
             url: `${process.env.REACT_APP_BASE_URL}/api/update/categoryImageUpload`,
             method: "put",
             data: formData,
-            headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-        });
+        }, { "Content-Type": "multipart/form-data" });
         if (AxiosFetch.type === "success") {
             dispatch(openLoader(false));
-            setReload(!reload)
             UpdateCatData({
                 ...currentCatData,
                 Url: '',
                 catagorniesImage: ""
             })
             modalClose();
-        } else if (AxiosFetch?.response?.data?.type === "error") {
+        } else {
             dispatch(openLoader(false));
         }
 

@@ -24,8 +24,6 @@ export const NotificationModal = () => {
     const handleClose = () => {
         setOpen(false);
     };
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     useEffect(() => {
         const handleKeyPress = (event) => {
             if (event.ctrlKey && event.key === '*') {
@@ -57,8 +55,7 @@ export const NotificationModal = () => {
                     url: `${process.env.REACT_APP_BASE_URL}/api/create/notification`,
                     method: "post",
                     data: formData,
-                    headers: { Authorization: brToken },
-                });
+                },{ "Content-Type": "multipart/form-data" });
                 console.log(data);
             },
         });

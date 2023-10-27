@@ -23,8 +23,6 @@ export const Vechiles = () => {
     const [vehicleId, setVehicleId] = useState()
     const dispatch = useDispatch();
     const loaction = useLocation();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -106,7 +104,6 @@ export const Vechiles = () => {
                 url: `${process.env.REACT_APP_BASE_URL}/api/update/vehicle-status`,
                 method: "put",
                 data: { vehicleId: id, statusId: status },
-                headers: { Authorization: brToken },
             });
 
         if (AxiosFetch.type === "success") {
@@ -121,7 +118,6 @@ export const Vechiles = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/vehicle-segments-retrieve`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage, brand_id: loaction.state }
         });
         setTotalPages(data?.count)

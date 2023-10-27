@@ -23,8 +23,6 @@ export const Categories = React.memo(() => {
     const [totalPages, setTotalPages] = useState(null);
     const dispatch = useDispatch();
     const user = JSON.parse(localStorage.getItem('user'))
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const handleChangeRowsPerPage = (event) => setRowsPerPage(+event.target.value);
     const catagoriesColumns = [
         {
@@ -123,7 +121,6 @@ export const Categories = React.memo(() => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/maincategories`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage }
         });
         if (data) {
@@ -139,7 +136,6 @@ export const Categories = React.memo(() => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-category-panel`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage, value: value[0] }
         });
         if (data) {
@@ -158,14 +154,13 @@ export const Categories = React.memo(() => {
         }
     };
     const debounceGetData = debounce(getData, 2000);
-    const updateCategory = async (id, data, type) => {
+    const updateCategory = async (id, data) => {
         dispatch(openLoader(true));
         try {
             const response = await AxiosFetchMethod({
                 url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-category`,
                 method: "put",
                 data: { catId: id, ...data },
-                headers: { Authorization: brToken },
             });
             if (response.type === "success") {
                 isAppendRow(setCatagriesDataRetrive, response.data);
@@ -182,11 +177,13 @@ export const Categories = React.memo(() => {
     };
     
     const pagePost = (id, featuredId) => {
-        updateCategory(id, { featuredId }, "page");
+        console.log(typeof featuredId);
+        updateCategory(id, { featuredId: featuredId }, "page");
     };
     useEffect(() => {
         catagoriesRetrieve()
     }, [page, rowsPerPage])
+    console.log('hello');
     return (
         <>
             <Box sx={{ flexGrow: 1, px: "2.8rem" }}>

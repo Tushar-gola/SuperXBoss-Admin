@@ -25,8 +25,6 @@ export const Order = () => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false)
     const [getOrderId, setGetOrderId] = useState()
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
 
     useEffect(() => {
         OrderDataRetrieve()
@@ -91,7 +89,6 @@ export const Order = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/orders-retrieve`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage }
         });
         if (data) {
@@ -109,7 +106,6 @@ export const Order = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-category-panel`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage, value: value[0] }
         });
         if (data) {

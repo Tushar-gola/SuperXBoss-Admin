@@ -76,10 +76,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
         setSource()
         setSegmentName([])
     }
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const maxNumber = 5; // Maximum number of images
-    const maxSize = 800 * 1024; // 800kb in bytes
 
     useEffect(() => {
         setImages(editData?.productImage);
@@ -224,8 +221,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                         url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-product`,
                         method: "put",
                         data: formData,
-                        headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-                    });
+                    }, { "Content-Type": "multipart/form-data" });
                     editData = null
                 }
                 else {
@@ -233,8 +229,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                         url: `${process.env.REACT_APP_BASE_URL}/api/create/create-product`,
                         method: "post",
                         data: formData,
-                        headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-                    });
+                    }, { "Content-Type": "multipart/form-data" });
                 }
                 if (AxiosFetch?.response?.data.type === "error") {
                     dispatch(openLoader(false));
@@ -255,7 +250,6 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/all-brand-for-model`,
-            headers: { Authorization: brToken },
         });
         setSparePart(data)
     }
@@ -282,7 +276,6 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/vehicle-segment-type`,
-            headers: { Authorization: brToken },
         });
         setVehicleSegments(data)
     }

@@ -4,8 +4,6 @@ import { Select, FormControl, InputLabel, OutlinedInput, MenuItem } from '@mui/m
 import { RetrieveData } from '../utils';
 export const SelectSearch = ({ debounceGetData, sparePart, segment, label, KeyId, statusCheck }) => {
     const [data, setData] = React.useState([])
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     React.useEffect(() => {
         sparePart && sparePartBrand();
         segment && vehicleSegment();
@@ -15,7 +13,6 @@ export const SelectSearch = ({ debounceGetData, sparePart, segment, label, KeyId
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/all-brand-for-model`,
-            headers: { Authorization: brToken },
         });
         setData(data)
     }
@@ -24,7 +21,6 @@ export const SelectSearch = ({ debounceGetData, sparePart, segment, label, KeyId
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/vehicle-segment-type`,
-            headers: { Authorization: brToken },
         });
         setData(data)
     }

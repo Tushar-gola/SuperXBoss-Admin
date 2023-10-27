@@ -36,8 +36,6 @@ export const CouponModal = ({ setCouponData, couponModalOpen, setCouponModalOpen
         setStartDate('')
         setEndDate('')
     };
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     useEffect(() => {
         const handleKeyPress = (event) => {
             if (event.ctrlKey && event.key === '*') {
@@ -80,7 +78,6 @@ export const CouponModal = ({ setCouponData, couponModalOpen, setCouponModalOpen
                             url: `${process.env.REACT_APP_BASE_URL}/api/update/coupon-update`,
                             method: "put",
                             data: { ...values, start_date: moment(startDate)?.format('YYYY-MM-DD'), end_date: moment(endDate)?.format('YYYY-MM-DD') },
-                            headers: { Authorization: brToken },
                         });
                         modaldata = null
                     } else {
@@ -88,7 +85,6 @@ export const CouponModal = ({ setCouponData, couponModalOpen, setCouponModalOpen
                             url: `${process.env.REACT_APP_BASE_URL}/api/create/coupon-create`,
                             method: "post",
                             data: { ...values, start_date: moment(startDate)?.format('YYYY-MM-DD'), end_date: moment(endDate)?.format('YYYY-MM-DD') },
-                            headers: { Authorization: brToken },
                         });
                     }
 
@@ -137,7 +133,6 @@ export const CouponModal = ({ setCouponData, couponModalOpen, setCouponModalOpen
                 open={open}
                 TransitionComponent={Transition}
                 keepMounted
-                // onClose={handleClose}
                 aria-describedby="alert-dialog-slide-description"
             >
 
@@ -145,9 +140,7 @@ export const CouponModal = ({ setCouponData, couponModalOpen, setCouponModalOpen
                     <h2>Create Coupon</h2>
                 </div>
                 <hr />
-                <form className="catagories_form"
-                    onSubmit={handleSubmit}
-                >
+                <form className="catagories_form" onSubmit={handleSubmit} >
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <label htmlFor="start_date">Start Date</label>

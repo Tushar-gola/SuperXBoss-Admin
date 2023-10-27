@@ -44,11 +44,8 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 }));
 export const WalletOffer = () => {
     const dispatch = useDispatch();
-    const [reload, setReload] = useState(false)
     const [rechargeData, setRechargeData] = useState([])
     const [editRechargeData, setEditRechargeData] = useState()
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     useEffect(() => {
         RechargeRetrieve()
     }, [])
@@ -67,35 +64,6 @@ export const WalletOffer = () => {
             },
             validationSchema: WalletValidate,
             onSubmit: async (val̥ues) => {
-                //     let AxiosFetch;
-                //     dispatch(openLoader(true));
-                //     if (editRechargeData) {
-                //         AxiosFetch = await AxiosFetchMethod({
-                //             url: `${process.env.REACT_APP_BASE_URL}/api/update/recharge-update`,
-                //             method: "put",
-                //             data: values,
-                //             headers: { Authorization: brToken },
-                //         }); setEditRechargeData(null)
-                //     } else {
-                //         AxiosFetch = await AxiosFetchMethod({
-                //             url: `${process.env.REACT_APP_BASE_URL}/api/create/recharge-create`,
-                //             method: "post",
-                //             data: values,
-                //             headers: { Authorization: brToken },
-                //         });
-                //     }
-                //     if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
-                //         dispatch(openLoader(false));
-                //     } else {
-
-                //         if (AxiosFetch.type === "success") {
-                //             isAppendRow(setRechargeData, AxiosFetch.data);
-                //             dispatch(openLoader(false));
-                //             values.amount = ""
-                //             values.offer_amount = ""
-                //         }
-                //     }
-                // },
                 dispatch(openLoader(true));
 
                 const url = editRechargeData
@@ -109,21 +77,19 @@ export const WalletOffer = () => {
                         url,
                         method,
                         data: values,
-                        headers: { Authorization: brToken },
                     });
 
-                    if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
+                    if (AxiosFetch.type === "success") {
+                        isAppendRow(setRechargeData, AxiosFetch.data);
                         dispatch(openLoader(false));
+                        setValues({
+                            amount: "",
+                            offer_amount: "",
+                        });
                     } else {
-                        if (AxiosFetch.type === "success") {
-                            isAppendRow(setRechargeData, AxiosFetch.data);
-                            dispatch(openLoader(false));
-                            setValues({
-                                amount: "",
-                                offer_amount: "",
-                            });
-                        }
+                        dispatch(openLoader(false));
                     }
+
                 } catch (error) {
                     console.error('Error:', error);
                     dispatch(openLoader(false));
@@ -138,7 +104,6 @@ export const WalletOffer = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/recharge-retrieve`,
-            headers: { Authorization: brToken },
         });
         if (data) {
             setRechargeData(data)
@@ -154,12 +119,10 @@ export const WalletOffer = () => {
             url: `${process.env.REACT_APP_BASE_URL}/api/update/recharge-update`,
             method: "put",
             data: { id: id, status: status },
-            headers: { Authorization: brToken },
         });
         if (data) {
             isAppendRow(setRechargeData, data.data);
             dispatch(openLoader(false));
-            setReload(!reload);
         }
     };
 

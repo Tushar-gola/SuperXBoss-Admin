@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
 import Styles from '../../../pages/style.module.css'
-import {RetrieveData, AxiosFetchMethod} from '../../../utils';
+import { RetrieveData, AxiosFetchMethod } from '../../../utils';
 import { styled } from '@mui/material/styles';
 const CustomCheckbox = styled(Checkbox)(({ theme }) => ({
     color: theme.status.danger,
@@ -17,8 +17,6 @@ export const BrandModal = ({ modalOpen, modalClose, data, id, productData }) => 
     const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState([])
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
 
     const handleClose = () => {
         setOpen(false);
@@ -29,7 +27,6 @@ export const BrandModal = ({ modalOpen, modalClose, data, id, productData }) => 
         const { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/selected-product-brands?product_id=${id}`,
-            headers: { Authorization: brToken },
         });
         setChecked(data.length ? JSON.parse(data[0]?.vehicle_brand_id) : [])
     }
@@ -39,23 +36,16 @@ export const BrandModal = ({ modalOpen, modalClose, data, id, productData }) => 
             initialValues: {
             },
             onSubmit: async (values) => {
-
-
                 let AxiosFetch = await AxiosFetchMethod({
                     url: `${process.env.REACT_APP_BASE_URL}/api/create/product-list-brand`,
                     method: "post",
                     data: { ...values, product_name: productData?.name, product_brand_id: productData?.brand?.id },
-                    headers: { Authorization: brToken },
                 });
-
-
-                if (AxiosFetch?.response?.data.type === "error") {
+                if (AxiosFetch.type === "success") {
                     dispatch(openLoader(false));
+                    handleClose()
                 } else {
-                    if (AxiosFetch.type === "success") {
-                        dispatch(openLoader(false));
-                        handleClose()
-                    }
+                    dispatch(openLoader(false));
                 }
             }
         });

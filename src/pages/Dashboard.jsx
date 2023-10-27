@@ -6,8 +6,6 @@ import { openLoader } from "../actions/index";
 import { useDispatch } from "react-redux";
 export const Dashboard = () => {
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const [data, setData] = React.useState([])
     useEffect(() => {
         dashboard()
@@ -18,7 +16,6 @@ export const Dashboard = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/dashboard-data`,
-            headers: { Authorization: brToken },
             // params: { page, limit: rowsPerPage }
         });
         console.log({data}, 'data');

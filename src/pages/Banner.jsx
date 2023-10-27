@@ -10,8 +10,6 @@ export const Banner = () => {
     const [reload, setReload] = useState(false)
     const [bannerData, setBannerData] = useState()
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     useEffect(() => {
         bannerRetrieve()
     }, [reload])
@@ -22,7 +20,6 @@ export const Banner = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/banner-retrieve`,
-            headers: { Authorization: brToken },
         });
         if (data) {
             setBannerData(data)
@@ -35,7 +32,6 @@ export const Banner = () => {
             url: `${process.env.REACT_APP_BASE_URL}/api/delete/banner-remove`,
             method: "delete",
             data: { id: deleteId },
-            headers: { Authorization: brToken },
         });
         if (AxiosFetch.type === "success") {
             dispatch(openLoader(false));

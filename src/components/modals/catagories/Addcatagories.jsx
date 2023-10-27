@@ -15,8 +15,6 @@ export const Addcatagories = (_props) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);;
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const handleClose = () => {
         setOpen(false);
         setEditRowData(false);
@@ -26,33 +24,22 @@ export const Addcatagories = (_props) => {
 
     const onUserSubmit = async (values) => {
         dispatch(openLoader(true));
-        let AxiosFetch
-        if (catRowSingleData) {
-            AxiosFetch = await AxiosFetchMethod({
-                url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-Category`,
-                method: "put",
-                data: values,
-                headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-            }); setCatRowSingleData(null)
-        }
-        else {
-            AxiosFetch = await AxiosFetchMethod({
-                url: `${process.env.REACT_APP_BASE_URL}/api/create/createCategory`,
-                method: "post",
-                data: values,
-                headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-            });
-        }
-        if (AxiosFetch?.type === "error" || AxiosFetch?.response?.data.type === "error") {
-            dispatch(openLoader(false));
-        } else {
-            if (AxiosFetch.type === "success") {
-                dispatch(openLoader(false));
-                isAppendRow(setCatagriesDataRetrive, AxiosFetch.data)
-                values.name = ""
-                values.description = ""
-                handleClose()
-            }
+        let AxiosFetch;
+        const apiUrl = catRowSingleData
+            ? `${process.env.REACT_APP_BASE_URL}/api/update/edit-Category`
+            : `${process.env.REACT_APP_BASE_URL}/api/create/createCategory`;
+
+        AxiosFetch = await AxiosFetchMethod({
+            url: apiUrl,
+            method: catRowSingleData ? "put" : "post",
+            data: values,
+        });
+        dispatch(openLoader(false));
+        if (AxiosFetch.type === "success") {
+            isAppendRow(setCatagriesDataRetrive, AxiosFetch.data);
+            values.name = "";
+            values.description = "";
+            handleClose();
         }
     }
 

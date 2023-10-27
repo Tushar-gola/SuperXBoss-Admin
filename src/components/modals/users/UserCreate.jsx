@@ -12,14 +12,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import SendIcon from '@mui/icons-material/Send';
 import { isAppendRow } from '../../../functions';
 
-export const UserCreate = ({ editModalOpen, setUserData, closeEditModal, id, userEditData, reload, setReload, setEditUserData }) => {
+export const UserCreate = ({ editModalOpen, setUserData, closeEditModal, id, userEditData, setEditUserData }) => {
     const [open, setOpen] = useState(false);
     const [role, setRole] = useState('');
     const [roleName, setRoleName] = useState([])
     const [eyeToggle, setEyeToggle] = useState(true)
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false)
@@ -75,7 +73,6 @@ export const UserCreate = ({ editModalOpen, setUserData, closeEditModal, id, use
                         url,
                         method,
                         data,
-                        headers: { Authorization: brToken },
                     });
 
                     if (AxiosFetch?.response?.data.type === "error") return dispatch(openLoader(false));
@@ -91,7 +88,6 @@ export const UserCreate = ({ editModalOpen, setUserData, closeEditModal, id, use
                             mobile: '',
                         });
                         handleClose();
-                        setReload(!reload);
                     }
                 } catch (error) {
                     console.error("Error:", error);
@@ -107,7 +103,6 @@ export const UserCreate = ({ editModalOpen, setUserData, closeEditModal, id, use
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/roles-retrieve`,
-            headers: { Authorization: brToken },
         });
         setRoleName(data?.rows)
     }
@@ -137,10 +132,7 @@ export const UserCreate = ({ editModalOpen, setUserData, closeEditModal, id, use
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                className="modal"
-
-            >
-                {/* <div className='asjddhdasj'> */}
+                className="modal" >
                 <Box className={Styles.style2}>
                     <div className="modal_title">
                         <h2>Create Users</h2>

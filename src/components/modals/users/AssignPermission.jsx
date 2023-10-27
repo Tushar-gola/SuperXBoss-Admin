@@ -22,8 +22,6 @@ export const AssignPermission =({ modalOpen, modalClose, id }) => {
     const [permission, setPermission] = useState([])
     const [checked, setChecked] = useState([])
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     useEffect(() => {
         modalOpen && userPermissionRetreive();
         modalOpen && assignCheckedRetrieve()
@@ -34,7 +32,6 @@ export const AssignPermission =({ modalOpen, modalClose, id }) => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/permission-retrieve`,
-            headers: { Authorization: brToken }
         });
         setPermission(data)
     };
@@ -53,7 +50,6 @@ export const AssignPermission =({ modalOpen, modalClose, id }) => {
             let { data } = await RetrieveData({
                 method: "get",
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/user-permission-retrieve?user_id=${id}`,
-                headers: { Authorization: brToken }
             });
             let permissionIdsArray = data.map(item => +item?.permission_id);
             setChecked(permissionIdsArray.length > 0 ? permissionIdsArray : [])
@@ -72,7 +68,6 @@ export const AssignPermission =({ modalOpen, modalClose, id }) => {
                     url: `${process.env.REACT_APP_BASE_URL}/api/create/user-assign-permission`,
                     method: "post",
                     data: { user_id: id, permission_id: checked },
-                    headers: { Authorization: brToken },
                 });
                 if (AxiosFetch?.response?.data.type === "error") {
                     dispatch(openLoader(false));

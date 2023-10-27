@@ -5,7 +5,7 @@ import { Box, Modal, Button, FormGroup, FormControlLabel } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
 import Styles from '../../../pages/style.module.css'
-import {RetrieveData} from '../../../utils';
+import { RetrieveData } from '../../../utils';
 import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import { useSpring, animated } from '@react-spring/web';
@@ -77,17 +77,14 @@ const CustomTreeItem = React.forwardRef((props, ref) => (
 ));
 
 
-export const CatagoriesModal =({ modalOpen, modalClose }) => {
+export const CatagoriesModal = ({ modalOpen, modalClose }) => {
     const [categoryModalData, setCategoryModalData] = useState()
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const CategoryRetrieve = async () => {
         dispatch(openLoader(true));
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/deep-category-retrieve`,
-            headers: { Authorization: brToken },
         });
         if (data) {
             dispatch(openLoader(false));
@@ -161,10 +158,8 @@ export const CatagoriesModal =({ modalOpen, modalClose }) => {
     };
 
     console.log([...new Set(checkedIds)])
-console.log(checkedIds,"checkedIds");
+    console.log(checkedIds, "checkedIds");
 
-
-    // console.log(checked,"mmmmmmmmmmm");
 
     return (
         <>
@@ -175,7 +170,7 @@ console.log(checkedIds,"checkedIds");
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 className="modal">
-                <Box className={Styles.style3} sx={{ padding: "2rem",position:"relative" }}>
+                <Box className={Styles.style3} sx={{ padding: "2rem", position: "relative" }}>
                     <div className="modal_title">
                         <h2>Create Category Modal</h2>
                     </div>
@@ -191,35 +186,35 @@ console.log(checkedIds,"checkedIds");
                     >
                         {renderTreeItems(categoryModalData)}
                     </TreeView>
-                 <div
-                            className="modal_btn"
-                            style={{
-                                display: "flex",
-                                gap: "1rem",
-                                justifyContent: "flex-end",
-                                position: "sticky",
-                                bottom:0
-                                
-                            }}
-                        >
+                    <div
+                        className="modal_btn"
+                        style={{
+                            display: "flex",
+                            gap: "1rem",
+                            justifyContent: "flex-end",
+                            position: "sticky",
+                            bottom: 0
 
-                            <Button
-                                variant="outlined"
-                                sx={{
+                        }}
+                    >
+
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                border: "2px solid #1B4B66",
+                                '&:hover': {
                                     border: "2px solid #1B4B66",
-                                    '&:hover': {
-                                        border: "2px solid #1B4B66",
-                                    }
-                                }}
-                                onClick={modalClose}
-                                className="btn_main2"
-                            >
-                                Close
-                            </Button>
-                            <Button variant="contained" className="btn_main" type="submit" endIcon={<SendIcon />}>
-                                Submit
-                            </Button>
-                        </div>
+                                }
+                            }}
+                            onClick={modalClose}
+                            className="btn_main2"
+                        >
+                            Close
+                        </Button>
+                        <Button variant="contained" className="btn_main" type="submit" endIcon={<SendIcon />}>
+                            Submit
+                        </Button>
+                    </div>
                 </Box>
             </Modal>
         </>

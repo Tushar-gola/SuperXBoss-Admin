@@ -12,12 +12,12 @@ import {RetrieveData, AxiosFetchMethod} from '../utils';
 import { Link } from "react-router-dom";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 import moment from 'moment/moment';
+import { isAppendRow } from '../functions';
 export const SubCategories = () => {
     const [page, setPage] = React.useState(1);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [totalPages, setTotalPages] = React.useState(null)
     const [subCatData, setSubCatData] = React.useState([])
-    const [reload, setReload] = React.useState(false)
     const [subCatEditData, setSubCatEditData] = React.useState(null)
     const [editRowData, setEditRowData] = React.useState(false)
     const [catUserId, setCatUserId] = React.useState(false)
@@ -27,8 +27,6 @@ export const SubCategories = () => {
         setRowsPerPage(+event.target.value);
      
     };
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
 
     const subCatagriesColumns = [
         {
@@ -112,11 +110,10 @@ export const SubCategories = () => {
         let { data: { rows, count } } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/subCategoriesRetrieve?catId=${+id}`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage }
         });
         if (rows) {
-            setTotalPages(count ?? 0)
+            setTotalPages(count || 0)
             setSubCatData(rows)
             dispatch(openLoader(false));
         }
@@ -127,20 +124,19 @@ export const SubCategories = () => {
         } catch (e) {
             console.log(e.message, "Sub catagory page");
         }
-    }, [rowsPerPage, page, reload, id])
+    }, [rowsPerPage, page, id])
 
     const handleSwitch = async (id, status) => {
         dispatch(openLoader(true));
         let AxiosFetch = await AxiosFetchMethod(
             {
-                url: `${process.env.REACT_APP_BASE_URL}/api/update/statusUpdate`,
+                url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-category`,
                 method: "put",
                 data: { catId: id, statusId: status },
-                headers: { Authorization: brToken },
             });
         if (AxiosFetch?.type === "success") {
             dispatch(openLoader(false));
-            setReload(!reload)
+            isAppendRow(setSubCatData, AxiosFetch.data)
         } else {
             dispatch(openLoader(false));
         }
@@ -151,7 +147,6 @@ export const SubCategories = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/search-like-category-panel`,
-            headers: { Authorization: brToken },
             params: { page, limit: rowsPerPage, value: value[0], id: id }
         });
         if (data) {
@@ -178,7 +173,7 @@ export const SubCategories = () => {
             <Box sx={{ flexGrow: 1, px: '2.8rem', }}>
                 <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
                     <Grid item xs={2}>
-                        <SubCataModal reload={reload} setReload={setReload} subCatEditData={subCatEditData} editRowData={editRowData} setEditRowData={setEditRowData} setSubCatEditData={setSubCatEditData} />
+                        <SubCataModal setSubCatData={setSubCatData} subCatEditData={subCatEditData} editRowData={editRowData} setEditRowData={setEditRowData} setSubCatEditData={setSubCatEditData} />
                     </Grid>
                     <Grid item xs={2}>
                         <SearchField debounceGetData={debounceGetData} label="Find Sub-category using name" keyId="subName" />
@@ -199,7 +194,7 @@ export const SubCategories = () => {
                     rowsPerPage={rowsPerPage}
             />
             
-            <SubCategoryImageModal catUserId={catUserId} modalOpen={modalOpen} modalClose={() => setModalOpen(false)} reload={reload} setReload={setReload} />
+            <SubCategoryImageModal catUserId={catUserId} modalOpen={modalOpen} modalClose={() => setModalOpen(false)} />
 
         </>
     );

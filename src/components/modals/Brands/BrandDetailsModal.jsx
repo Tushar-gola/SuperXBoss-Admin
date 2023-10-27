@@ -29,9 +29,6 @@ const CustomMenuItem = styled(MenuItem)(({ theme }) => ({
 export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandData, brandEditModalOpen, setBrandEditModalOpen }) => {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
-
     useEffect(() => {
         const handleKeyPress = (event) => {
             if (event.ctrlKey && event.key === '*') {
@@ -98,10 +95,7 @@ export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandDat
                 url,
                 method,
                 data: values,
-                headers: { Authorization: brToken },
             });
-            console.log(AxiosFetch);
-
             if (AxiosFetch?.type === "success") {
                 dispatch(openLoader(false));
                 isAppendRow(setBrandData, AxiosFetch.data);

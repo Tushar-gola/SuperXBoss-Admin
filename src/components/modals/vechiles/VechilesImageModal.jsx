@@ -4,12 +4,10 @@ import { Button, Modal, Box } from "@mui/material";
 import UploadIcon from "../../../images/icons8-upload-to-the-cloud-50.png";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
-import {AxiosFetchMethod} from "../../../utils";
+import { AxiosFetchMethod } from "../../../utils";
 import Styles from '../../../pages/style.module.css'
 import SendIcon from '@mui/icons-material/Send';
 export const VechilesImageModal = ({ modalOpen, modalClose, UserId, reload, setReload }) => {
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     const dispatch = useDispatch();
     const maxSize = 800 * 1024; // 800kb in bytes
 
@@ -31,14 +29,11 @@ export const VechilesImageModal = ({ modalOpen, modalClose, UserId, reload, setR
         formData.append('image', currentCatData.vehicleImage)
         formData.append('id', currentCatData.vehicleId)
         dispatch(openLoader(true));
-
-        let AxiosFetch = await AxiosFetchMethod(
-            {
-                url: `${process.env.REACT_APP_BASE_URL}/api/update/vehicle-image-upload`,
-                method: "put",
-                data: formData,
-                headers: { "Content-Type": "multipart/form-data", Authorization: brToken },
-            });
+        let AxiosFetch = await AxiosFetchMethod({
+            url: `${process.env.REACT_APP_BASE_URL}/api/update/vehicle-image-upload`,
+            method: "put",
+            data: formData,
+        }, { "Content-Type": "multipart/form-data" });
         if (AxiosFetch?.type === "success") {
             dispatch(openLoader(false));
             setReload(!reload)

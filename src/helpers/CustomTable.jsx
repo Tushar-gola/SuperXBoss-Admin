@@ -65,7 +65,7 @@ export const CustomTable = ({ rowData, columns, totalPages, handleChangeRowsPerP
                             })}
                         </TableBody>
                     </Table>
-                    {rowData.length === 0 ? <h2>Data is not available..........</h2> : null}
+                    {rowData?.length === 0 ? <h2>Data is not available..........</h2> : null}
                 </TableContainer>
 
                 <TablePagination

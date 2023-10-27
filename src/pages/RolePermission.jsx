@@ -17,15 +17,12 @@ export const RolePermission = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(null);
     const [Roles, setRoles] = useState([])
-    const [reload, setReload] = useState(false);
     const [openRolePermission, setOpenRolePermission] = useState(false)
     const [roleData, setRoleData] = useState(null)
     const dispatch = useDispatch();
-    let token = localStorage.getItem("token");
-    let brToken = `Bearer ${token}`;
     useEffect(() => {
         roleRetrieve()
-    }, [page, rowsPerPage, reload])
+    }, [page, rowsPerPage])
 
     const RoleColumns = [
         { id: "id", label: "#Id" },
@@ -78,15 +75,12 @@ export const RolePermission = () => {
                 url: `${process.env.REACT_APP_BASE_URL}/api/update/role-status`,
                 method: "put",
                 data: { id: id, status: status },
-                headers: { Authorization: brToken },
             });
             console.log(data);
             if (data) {
                 isAppendRow(setRoles, data.data)
                 dispatch(openLoader(false));
-                setReload(!reload);
             } else {
-                console.error("No data in the response.");
                 dispatch(openLoader(false));
             }
         } catch (error) {
@@ -101,7 +95,6 @@ export const RolePermission = () => {
             const response = await RetrieveData({
                 method: "get",
                 url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/roles-retrieve`,
-                headers: { Authorization: brToken },
                 params: { page, limit: rowsPerPage },
             });
 
