@@ -11,16 +11,17 @@ import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../actions/index";
 import { VechilesImageModal, VechilesModal } from '../components'
+import { isAppendRow } from '../functions';
 export const Vechiles = () => {
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(0)
     const [rowData, setRowData] = useState([])
-    const [reload, setReload] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [vehicleRowData, setVehicleRowData] = useState(null)
     const [modalImage, setModalImage] = useState(false);
     const [vehicleId, setVehicleId] = useState()
+    const user = JSON.parse(localStorage.getItem('user'))
     const dispatch = useDispatch();
     const loaction = useLocation();
 
@@ -46,7 +47,7 @@ export const Vechiles = () => {
         { id: "name", label: 'Name' },
         {
             id: "user_id", label: 'Create By', renderCell: (parms) => {
-                return <div>{parms.user.name}</div>
+                return <div>{parms?.user?.name || user.name}</div>
 
             }
         },
@@ -101,14 +102,14 @@ export const Vechiles = () => {
         dispatch(openLoader(true));
         let AxiosFetch = await AxiosFetchMethod(
             {
-                url: `${process.env.REACT_APP_BASE_URL}/api/update/vehicle-status`,
+                url: `${process.env.REACT_APP_BASE_URL}/api/update/edit-vehicle`,
                 method: "put",
-                data: { vehicleId: id, statusId: status },
+                data: { vehicleId: id, status: status },
             });
 
         if (AxiosFetch.type === "success") {
+            isAppendRow(setRowData, AxiosFetch.data)
             dispatch(openLoader(false));
-            setReload(!reload)
         } else if (AxiosFetch?.response?.data?.type === "error") {
             dispatch(openLoader(false));
         }
@@ -129,7 +130,7 @@ export const Vechiles = () => {
         } catch (e) {
             console.log(e.messgae, "Vechile Page");
         }
-    }, [page, rowsPerPage, reload])
+    }, [page, rowsPerPage])
 
     return (
         <>
@@ -138,8 +139,7 @@ export const Vechiles = () => {
                     <Grid item xs={3}>
                         <VechilesModal
                             editRowData={editModalOpen} // modal open
-                            reload={reload} // Reload
-                            setReload={setReload}  // Reload
+                            setRowData={setRowData}
                             setEditRowData={setEditModalOpen}
                             RowSingleData={vehicleRowData}
                             setRowSingleData={setVehicleRowData}
@@ -162,8 +162,7 @@ export const Vechiles = () => {
                 modalOpen={modalImage}
                 modalClose={() => setModalImage(false)}
                 UserId={vehicleId}
-                reload={reload}
-                setReload={setReload}
+                setRowData={setRowData}
             />
 
         </>

@@ -9,7 +9,8 @@ import Styles from '../../../pages/style.module.css'
 import AddIcon from '@mui/icons-material/Add';
 import { useLocation } from "react-router-dom";
 import SendIcon from '@mui/icons-material/Send';
-export const VechilesModal = ({ reload, setReload, editRowData, setEditRowData, RowSingleData, setRowSingleData }) => {
+import { isAppendRow } from "../../../functions";
+export const VechilesModal = ({ setRowData, editRowData, setEditRowData, RowSingleData, setRowSingleData }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => { setOpen(true); };
     const dispatch = useDispatch();
@@ -37,7 +38,7 @@ export const VechilesModal = ({ reload, setReload, editRowData, setEditRowData, 
                             method: "put",
                             data: values,
                         });
-                    RowSingleData = null
+                    setRowSingleData(null)
 
                 } else {
                     AxiosFetch = await AxiosFetchMethod({
@@ -46,12 +47,13 @@ export const VechilesModal = ({ reload, setReload, editRowData, setEditRowData, 
                         data: { ...values, brand_id: location.state },
                     });
                 }
+                console.log(AxiosFetch, 'hello');
                 if (AxiosFetch.type === "success") {
+                    isAppendRow(setRowData, AxiosFetch.data)
                     dispatch(openLoader(false));
                     values.name = ""
                     values.description = ""
                     handleClose()
-                    setReload(!reload)
                 } else {
                     dispatch(openLoader(false));
                 }
@@ -105,7 +107,7 @@ export const VechilesModal = ({ reload, setReload, editRowData, setEditRowData, 
                                 placeholder="Name"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.name} />
+                                value={values.name || ''} />
                         </div>
                         <div>
                             <label htmlFor="description">Description</label>
@@ -116,7 +118,7 @@ export const VechilesModal = ({ reload, setReload, editRowData, setEditRowData, 
                                 placeholder="Description"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.description}
+                                value={values.description || ''}
                             />
                         </div>
                         <div

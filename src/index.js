@@ -14,7 +14,8 @@ const theme = createTheme({
   // For example:
   palette: {
     primary: {
-      main: '#80808064', // Change this to your desired primary color
+      // main: '#80808064', // Change this to your desired primary color
+      main: '#1B4B66', // Change this to your desired primary color
     }
   },
   status: {

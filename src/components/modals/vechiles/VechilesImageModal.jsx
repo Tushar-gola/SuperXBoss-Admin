@@ -7,7 +7,8 @@ import { openLoader } from "../../../actions/index";
 import { AxiosFetchMethod } from "../../../utils";
 import Styles from '../../../pages/style.module.css'
 import SendIcon from '@mui/icons-material/Send';
-export const VechilesImageModal = ({ modalOpen, modalClose, UserId, reload, setReload }) => {
+import { isAppendRow } from '../../../functions';
+export const VechilesImageModal = ({ modalOpen, modalClose, UserId, setRowData }) => {
     const dispatch = useDispatch();
     const maxSize = 800 * 1024; // 800kb in bytes
 
@@ -35,8 +36,8 @@ export const VechilesImageModal = ({ modalOpen, modalClose, UserId, reload, setR
             data: formData,
         }, { "Content-Type": "multipart/form-data" });
         if (AxiosFetch?.type === "success") {
+            isAppendRow(setRowData, AxiosFetch.data)
             dispatch(openLoader(false));
-            setReload(!reload)
             UpdateCatData({
                 ...currentCatData,
                 Url: '',

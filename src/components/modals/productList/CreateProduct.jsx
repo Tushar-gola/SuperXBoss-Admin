@@ -287,7 +287,6 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
         setSegmentName(value)
 
     }
-    console.log(segmentName, "mmmmmmmm");
     return (
         <>
             <Stack spacing={2} direction="row">

@@ -22,6 +22,7 @@ export const SubCategories = () => {
     const [editRowData, setEditRowData] = React.useState(false)
     const [catUserId, setCatUserId] = React.useState(false)
     const [modalOpen, setModalOpen] = React.useState(false)
+    const user = JSON.parse(localStorage.getItem('user'))
     const dispatch = useDispatch();
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -46,7 +47,7 @@ export const SubCategories = () => {
         { id: "name", label: 'Name' },
         {
             id: "user", label: "Create By", renderCell: (parms) => {
-                return <div>{parms?.user?.name}</div>
+                return <div>{parms?.user?.name || user.name}</div>
 
             },
         },

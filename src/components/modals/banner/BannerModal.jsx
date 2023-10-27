@@ -1,48 +1,56 @@
-import React from 'react';
-import { Box, Grid, Button, Stack, Modal } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Box, Grid, Button, Stack, Modal, FormControl, InputLabel, Select, OutlinedInput, MenuItem, Checkbox, ListItemText } from '@mui/material';
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
-import { AxiosFetchMethod } from "../../../utils";
+import { AxiosFetchMethod, RetrieveData } from "../../../utils";
 import SendIcon from '@mui/icons-material/Send';
 import UploadIcon from "../../../images/icons8-upload-to-the-cloud-50.png";
 import AddIcon from '@mui/icons-material/Add';
 import Styles from '../../../pages/style.module.css'
 import { isAppendRow } from '../../../functions';
-export const BannerModal = ({ setBannerData }) => {
-
+export const BannerModal = ({ setBannerData, modalOpen, closeModal, bannerEditData, setBannerEditData }) => {
+    console.log(bannerEditData);
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
+    const [productId, setProductId] = React.useState([])
+    const [getProductId, setGetProductId] = React.useState([])
 
     const handleClose = () => {
         setOpen(false);
+        closeModal()
+        setBannerEditData('')
     };
+    useEffect(() => {
+        modalOpen && setOpen(modalOpen)
+        modalOpen && setGetProductId(JSON.parse(bannerEditData.product_id) || [])
+    }, [modalOpen])
     const dispatch = useDispatch();
     const [bannerImage, setBannerImage] = React.useState({
         banner_image: "",
         Url: ''
     })
     const maxSize = 800 * 1024;
-
-
-
-
     const { handleSubmit } =
         useFormik({
-            initialValues: {},
+            initialValues: {
+            },
             onSubmit: async (val̥ues) => {
                 dispatch(openLoader(true));
                 let formData = new FormData();
                 formData.append('image', bannerImage.banner_image)
+                formData.append('ids', JSON.stringify(getProductId))
+                formData.append('id', bannerEditData.id)
                 const AxiosFetch = await AxiosFetchMethod({
-                    url: `${process.env.REACT_APP_BASE_URL}/api/create/banner-create`,
-                    method: "post",
+                    url: `${process.env.REACT_APP_BASE_URL}/api/${!bannerEditData ? "create/banner-create" : "update/banner-update"}`,
+                    method: !bannerEditData ? "post" : "put",
                     data: formData,
                 }, { "Content-Type": "multipart/form-data" });
 
                 if (AxiosFetch.type === "success") {
                     isAppendRow(setBannerData, AxiosFetch.data)
                     dispatch(openLoader(false));
+                    setBannerEditData({})
                     setBannerImage({
                         ...bannerImage,
                         Url: '',
@@ -54,7 +62,33 @@ export const BannerModal = ({ setBannerData }) => {
                 }
             },
         });
+    const ProductBanner = async () => {
+        dispatch(openLoader(true));
+        try {
+            const { data } = await RetrieveData({
+                method: "get",
+                url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/product-banner`,
+            });
+            if (data) {
+                setProductId(data)
+                dispatch(openLoader(false));
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            dispatch(openLoader(false));
+        }
+    };
+    useEffect(() => {
+        ProductBanner()
+    }, [])
 
+    const handleIdGet = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setGetProductId(value)
+    }
     return (
 
 
@@ -90,7 +124,27 @@ export const BannerModal = ({ setBannerData }) => {
                     >
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                {/* <label htmlFor="image">Offer Image</label> */}
+                                <FormControl fullWidth sx={{ marginTop: ".5rem" }}>
+                                    <InputLabel id="demo-multiple-checkbox-label">Product Assign</InputLabel>
+                                    <Select
+                                        labelId="demo-multiple-checkbox-label"
+                                        id="demo-multiple-checkbox"
+                                        multiple
+                                        value={getProductId}
+                                        onChange={handleIdGet}
+                                        input={<OutlinedInput label="Product Assign   " />}
+                                        renderValue={(selected) => selected.join(', ')}
+                                    >
+                                        {productId?.map((item) => (
+                                            <MenuItem key={item.id} value={item.id}>
+                                                <Checkbox checked={getProductId.includes(item?.id)} />
+                                                <ListItemText primary={item.name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sx={{ display: bannerEditData ? "none" : "block" }}>
                                 <button className="upload_img">
                                     <p>Upload Image</p>
                                     <input
@@ -116,10 +170,7 @@ export const BannerModal = ({ setBannerData }) => {
                                 <div className="output_catagories">
                                     <img
                                         src={bannerImage.Url ? bannerImage.Url : UploadIcon}
-                                        // src={UploadIcon}
-
-                                        alt=""
-
+                                        alt="_blank"
                                         style={bannerImage.Url ? { width: "100%", height: "100%" } : null}
                                     />
                                 </div>
