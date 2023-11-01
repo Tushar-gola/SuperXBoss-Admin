@@ -16,7 +16,6 @@ const sty1 = {
     padding: "1.5rem 0"
 }
 export const CustomTable = ({ rowData, columns, totalPages, handleChangeRowsPerPage, page, setPage, rowsPerPage, orderSty }) => {
-    console.log(rowData?.length);
     return (
         <>
             <Paper sx={{ overflow: 'hidden', px: '2.4rem', mt: '1.5rem', mb: '5.574rem' }}>

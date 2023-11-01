@@ -7,6 +7,7 @@ import { Navigate } from 'react-router-dom';
 export const Routers = () => {
     return (
         <>
+        
             <Routes>
                 <Route path="/" element={<PublicRoute />}>
                     <Route path='/' element={<Navigate replace to="/signIn" />} />
@@ -32,7 +33,6 @@ export const Routers = () => {
                         <Route path="/information" element={<Information />} />
                         <Route path="/banner" element={<Banner />} />
                         <Route path="/faq" element={<Faq />} />
-
                     </Route>
                 </Route>
             </Routes>
