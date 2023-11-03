@@ -19,11 +19,10 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
     const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState([])
     const [personName, setPersonName] = React.useState([]);
-    // eslint-disable-next-line no-unused-vars
     const [disable, setDisable] = useState([])
     const [getBrandId, setGetBrandId] = useState()
     const dispatch = useDispatch();
-    let year = 1975;
+    let year = 1999;
     let date = new Date().getFullYear();
     let arrYear = []
     for (let index = year; index < date; index++) {
@@ -44,7 +43,6 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
         }
     }, [data])
 
-
     useEffect(() => {
         setFieldValue("vehicle_id", checked)
     }, [checked])
@@ -64,7 +62,6 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
 
 
     const handleValueChange = (id, value) => {
-
         setPersonName((prevValues) => {
             let found = false;
 
@@ -122,8 +119,8 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
             });
             const finalResult = Object.values(result);
             setPersonName(finalResult);
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            console.error(error);
         }
     }
     const { handleSubmit, setFieldValue } =
@@ -185,7 +182,7 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
                                                                 id="demo-multiple-checkbox"
                                                                 multiple
                                                                 value={personName.find(pn => pn.vehicle_id === id)?.years || []}
-                                                                onChange={e => { handleValueChange(id, e.target.value); console.log(e.target.value, "value") }}
+                                                                onChange={e => { handleValueChange(id, e.target.value); }}
                                                                 input={<OutlinedInput label="Year" />}
                                                                 renderValue={(selected) => selected.join(', ')}
                                                                 disabled={!checked.includes(id)}
@@ -231,7 +228,7 @@ export const VehicleModal = ({ modalOpen, modalClose, data, id, productData }) =
                                     '&:hover': {
                                         border: "2px solid #1B4B66",
                                     }
-                                }} className="btn_main2">
+                                }} className="btn_main2" onClick={modalClose}>
                                 Close
                             </Button>
                         </div>

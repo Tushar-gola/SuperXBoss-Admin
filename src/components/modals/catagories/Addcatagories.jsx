@@ -8,7 +8,6 @@ import { AxiosFetchMethod } from "../../../utils";
 import Styles from '../../../pages/style.module.css'
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
-import { CategoryValidate } from '../../../schemas'
 import { isAppendRow } from '../../../functions'
 export const Addcatagories = (_props) => {
     const { editRowData, setEditRowData, catRowSingleData, setCatRowSingleData, setCatagriesDataRetrive } = _props;
@@ -49,7 +48,6 @@ export const Addcatagories = (_props) => {
                 name: "",
                 description: "",
             },
-            validationSchema: CategoryValidate,
             onSubmit: async (val̥ues) => {
                 onUserSubmit(values)
             },
@@ -118,9 +116,7 @@ export const Addcatagories = (_props) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 value={values.name || ''} />
-                            <div className='yup-error' >
-                                {errors.name && touched.name ? <span className='err'>{errors.name}</span> : null}
-                            </div>
+
                         </div>
                         <div>
                             <label htmlFor="description">Description</label>

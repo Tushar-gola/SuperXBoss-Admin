@@ -18,7 +18,7 @@ export const Customer = () => {
         try {
             userDataRetreive();
         } catch (e) {
-            console.log(e.message, "user page");
+            console.error(e.message, "user page");
         }
     }, [rowsPerPage, page, reload]);
 
@@ -61,7 +61,6 @@ export const Customer = () => {
             id: "status",
             label: "Status",
             renderCell: (parms) => {
-                console.log(parms);
                 return parms.status ? (
                     <div className="active" style={{ width: "90px" }}>Active</div>
                 ) : (

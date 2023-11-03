@@ -47,7 +47,6 @@ export const VechilesModal = ({ setRowData, editRowData, setEditRowData, RowSing
                         data: { ...values, brand_id: location.state },
                     });
                 }
-                console.log(AxiosFetch, 'hello');
                 if (AxiosFetch.type === "success") {
                     isAppendRow(setRowData, AxiosFetch.data)
                     dispatch(openLoader(false));

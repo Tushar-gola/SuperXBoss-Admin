@@ -63,7 +63,6 @@ export const SelectSearch = ({ debounceGetData, sparePart, segment, label, KeyId
                 }) :
 
                     status && status?.map((res, index) => {
-                        console.log();
                         return (
                             <MenuItem key={index} value={res.id || ''} sx={{ fontSize: '1.4rem' }} >
                                 {res.label}

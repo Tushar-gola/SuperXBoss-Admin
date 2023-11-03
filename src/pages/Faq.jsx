@@ -151,7 +151,6 @@ export const Faq = () => {
             method: "put",
             data: { id: id, status: status },
         });
-        console.log(data);
         if (data) {
             dispatch(openLoader(false));
             isAppendRow(setFaq, data.data)

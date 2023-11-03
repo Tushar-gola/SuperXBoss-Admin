@@ -239,7 +239,6 @@ export const UserCreate = ({ editModalOpen, setUserData, closeEditModal, id, use
                                             <em>None</em>
                                         </MenuItem>
                                         {roleName && roleName.map(({ id, name }, index) => {
-                                            // console.log(id);
                                             return (
                                                 <MenuItem value={id} key={index} sx={{ fontSize: "1.5rem" }}>{name}</MenuItem>
                                             )

@@ -54,7 +54,7 @@ export const AssignPermission =({ modalOpen, modalClose, id }) => {
             let permissionIdsArray = data.map(item => +item?.permission_id);
             setChecked(permissionIdsArray.length > 0 ? permissionIdsArray : [])
         } catch (e) {
-            console.log(e.message);
+            console.error(e.message);
         }
     }
 

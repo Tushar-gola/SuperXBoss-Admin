@@ -55,7 +55,7 @@ export const AddRolePermission =({ modalOpen, modalClose, RoleData }) => {
             let permissionIdsArray = data.map(item => +item?.permission_id);
             setChecked(permissionIdsArray.length > 0 ? permissionIdsArray : [])
         } catch (e) {
-            console.log(e?.message);
+            console.error(e?.message);
         }
     }
     const { handleBlur, handleSubmit, handleChange, values, setValues } =
@@ -126,7 +126,6 @@ export const AddRolePermission =({ modalOpen, modalClose, RoleData }) => {
                                     sx={{ fontSize: "1.4rem" }}
                                 >
                                     {permission.length > 0 ? permission?.map((item, index) => {
-                                        console.log(permission, "llllllllllll")
                                         return (
                                             <Grid container spacing={1} sx={{ padding: "1.5rem 3rem", width: "500px", }} key={index}>
                                                 <Grid item xs={12} ><h1>{item?.heading}</h1></Grid>

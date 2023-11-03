@@ -177,13 +177,11 @@ export const Categories = React.memo(() => {
     };
     
     const pagePost = (id, featuredId) => {
-        console.log(typeof featuredId);
         updateCategory(id, { featuredId: featuredId }, "page");
     };
     useEffect(() => {
         catagoriesRetrieve()
     }, [page, rowsPerPage])
-    console.log('hello');
     return (
         <>
             <Box sx={{ flexGrow: 1, px: "2.8rem" }}>

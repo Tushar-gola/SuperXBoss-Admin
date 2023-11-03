@@ -65,7 +65,7 @@ export const SignIn = () => {
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('user', JSON.stringify(res?.data?.user));
         }).catch((err) => {
-          console.log(err);
+          console.error(err);
           if (err?.response?.data.errors[0] == null) {
             dispatch(openLoader(false));
             enqueueSnackbar(err?.response?.data.message, { variant: "error" })

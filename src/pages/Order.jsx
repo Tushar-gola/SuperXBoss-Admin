@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { Grid, Box } from "@mui/material";
-import {CustomTable} from "../helpers";
+import { CustomTable } from "../helpers";
 import { useDispatch } from "react-redux";
 import { openLoader } from "../actions/index";
 import moment from 'moment/moment';
 import { faList } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {RetrieveData} from '../utils';
+import { RetrieveData } from '../utils';
 import { OrderDetails, SearchField } from '../components';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -34,7 +34,6 @@ export const Order = () => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-    console.log(date);
 
     const orderColumns = [
         { id: "id", label: "#Id" },
@@ -72,7 +71,7 @@ export const Order = () => {
                     <div className="catagories_edit">
 
                         <button
-                            onClick={() => { console.log(parms.order_id); setOpen(true); setGetOrderId(parms?.order_id) }}
+                            onClick={() => { setOpen(true); setGetOrderId(parms?.order_id) }}
                             disabled={!(parms.type === "purchase")}
                         >
                             <FontAwesomeIcon icon={faList} size="lg" />

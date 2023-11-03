@@ -31,7 +31,7 @@ export const Users = () => {
     try {
       userDataRetreive();
     } catch (e) {
-      console.log(e.message, "user page");
+      console.error(e.message, "user page");
     }
   }, [rowsPerPage, page]);
 

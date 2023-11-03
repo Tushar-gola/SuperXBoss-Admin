@@ -19,6 +19,3 @@ export const WalletValidate = Yup.object({
     amount: Yup.number().required("Amount is required"),
     offer_amount: Yup.number().required("Offer Amount is required"),
 });
-export const CategoryValidate = Yup.object({
-    name: Yup.string().min(2,"Name must be at least 2 characters long").required("Please enter your Username"),
-});

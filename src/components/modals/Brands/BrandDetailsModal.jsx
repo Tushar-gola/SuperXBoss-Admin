@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
-import { Stack, Button, Modal, Box, MenuItem, Select } from '@mui/material';
+import { Stack, Button, Modal, Box, Select, FormControl, InputLabel, OutlinedInput, MenuItem, Checkbox, ListItemText } from '@mui/material';
 import Styles from '../../../pages/style.module.css'
 import { useFormik } from 'formik';
-import { AxiosFetchMethod } from '../../../utils';
+import { AxiosFetchMethod, RetrieveData } from '../../../utils';
 import { useDispatch } from "react-redux";
 import { openLoader } from "../../../actions/index";
 import AddIcon from '@mui/icons-material/Add';
@@ -28,6 +28,8 @@ const CustomMenuItem = styled(MenuItem)(({ theme }) => ({
 
 export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandData, brandEditModalOpen, setBrandEditModalOpen }) => {
     const [open, setOpen] = React.useState(false);
+    const [vehicleSegments, setVehicleSegments] = React.useState()
+    const [segmentName, setSegmentName] = React.useState([])
     const dispatch = useDispatch();
     useEffect(() => {
         const handleKeyPress = (event) => {
@@ -49,19 +51,11 @@ export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandDat
             label: "Spare Parts"
         },
         {
-            value: "vehicle + Spare Parts",
+            value: "vehicle_SpareParts",
             label: "Vehicle + Spare Parts"
         }
     ];
-    useEffect(() => {
-        if (brandEditData) {
-            setValues({ name: brandEditData?.name, description: brandEditData?.description, type: brandEditData?.type, brandId: brandEditData?.id })
-        }
-    }, [brandEditData])
 
-    useEffect(() => {
-        setOpen(brandEditModalOpen)
-    }, [brandEditModalOpen])
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -90,11 +84,10 @@ export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandDat
                 url = `${process.env.REACT_APP_BASE_URL}/api/create/create-brand`;
                 method = "post";
             }
-
             const AxiosFetch = await AxiosFetchMethod({
                 url,
                 method,
-                data: values,
+                data: { ...values, brand_segment: JSON.stringify(segmentName) },
             });
             if (AxiosFetch?.type === "success") {
                 dispatch(openLoader(false));
@@ -107,12 +100,38 @@ export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandDat
                 });
                 setBrandEditData(null);
                 handleClose();
+            } else {
+                dispatch(openLoader(false));
             }
 
         }
     })
 
+    const vehicleSegment = async () => {
+        let { data } = await RetrieveData({
+            method: "get",
+            url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/vehicle-segment-type`,
+        });
+        setVehicleSegments(data)
+        console.log(data);
+    }
+    const handleNameGet = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setSegmentName(value)
 
+    }
+    useEffect(() => {
+        if (brandEditData) {
+            setValues({ name: brandEditData?.name, description: brandEditData?.description, type: brandEditData?.type, brandId: brandEditData?.id })
+        }
+    }, [brandEditData])
+
+    useEffect(() => {
+        setOpen(brandEditModalOpen)
+        vehicleSegment()
+    }, [brandEditModalOpen])
     return (
         <>
 
@@ -165,6 +184,25 @@ export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandDat
                                 })}
                             </CustomSelect>
                         </div>
+                        <FormControl fullWidth sx={{ marginTop: ".5rem" }}>
+                            <InputLabel id="demo-multiple-checkbox-label">Vehicle-segment</InputLabel>
+                            <Select
+                                labelId="demo-multiple-checkbox-label"
+                                id="demo-multiple-checkbox"
+                                multiple
+                                value={segmentName || []}
+                                onChange={handleNameGet}
+                                input={<OutlinedInput label="Vehicle-segment" />}
+                                renderValue={(selected) => selected.join(', ')}
+                            >
+                                {vehicleSegments?.map((item, index) => (
+                                    <MenuItem key={index} value={item.name}>
+                                        <Checkbox checked={segmentName.includes(item?.name)} />
+                                        <ListItemText primary={item.name} />
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                         <div
                             className="modal_btn"
                             style={{

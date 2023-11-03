@@ -11,7 +11,6 @@ import AddIcon from '@mui/icons-material/Add';
 import Styles from '../../../pages/style.module.css'
 import { isAppendRow } from '../../../functions';
 export const BannerModal = ({ setBannerData, modalOpen, closeModal, bannerEditData, setBannerEditData }) => {
-    console.log(bannerEditData);
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const [productId, setProductId] = React.useState([])
@@ -41,7 +40,9 @@ export const BannerModal = ({ setBannerData, modalOpen, closeModal, bannerEditDa
                 let formData = new FormData();
                 formData.append('image', bannerImage.banner_image)
                 formData.append('ids', JSON.stringify(getProductId))
-                formData.append('id', bannerEditData.id)
+                if (bannerEditData) {
+                    formData.append('id', bannerEditData?.id)
+                }
                 const AxiosFetch = await AxiosFetchMethod({
                     url: `${process.env.REACT_APP_BASE_URL}/api/${!bannerEditData ? "create/banner-create" : "update/banner-update"}`,
                     method: !bannerEditData ? "post" : "put",

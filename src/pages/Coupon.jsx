@@ -115,7 +115,6 @@ export const Coupon = () => {
             method: "put",
             data: { id, status },
         });
-        console.log(data);
         if (data) {
             isAppendRow(setCouponData, data.data)
             dispatch(openLoader(false));

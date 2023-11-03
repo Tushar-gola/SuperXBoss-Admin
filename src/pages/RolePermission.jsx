@@ -76,7 +76,6 @@ export const RolePermission = () => {
                 method: "put",
                 data: { id: id, status: status },
             });
-            console.log(data);
             if (data) {
                 isAppendRow(setRoles, data.data)
                 dispatch(openLoader(false));

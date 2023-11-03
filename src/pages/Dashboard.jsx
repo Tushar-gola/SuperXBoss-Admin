@@ -16,14 +16,11 @@ export const Dashboard = () => {
         let { data } = await RetrieveData({
             method: "get",
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/dashboard-data`,
-            // params: { page, limit: rowsPerPage }
         });
-        console.log({data}, 'data');
         if (data) {
             setData(data);
             dispatch(openLoader(false));
         }else{
-            console.log('else');
             dispatch(openLoader(false));
         }
     }

@@ -109,7 +109,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
             }
         };
         window.addEventListener('keyup', handleKeyPress);
-    }, []); // Empty dependency array means this effect runs only once
+    }, []); 
 
     const handleClickOpen = () => {
         setBulkDiscount(true);
@@ -139,11 +139,8 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
         const file = event.target.files[0];
 
         if (file) {
-            // Check the file size
             if (file.size > 1.5 * 1024 * 1024) {
-                // File size is greater than 1.5 MB
                 alert('Please select a file that is 1.5 MB or smaller.');
-                // Clear the input field
                 event.target.value = '';
             } else {
                 setImages([...images, { video: file }])
@@ -343,8 +340,6 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                                             isDragging,
                                             dragProps,
                                         }) => (
-                                            // write your building UI
-
                                             <div className="upload__image-wrapper">
                                                 <div style={{ display: "flex", flexDirection: "row", gap: "2rem" }}>
                                                     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -367,7 +362,6 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
 
                                                     <div className='vedioUpload'>
                                                         <input
-                                                            // ref={inputRef}
                                                             className="VideoInput_input"
                                                             type="file"
                                                             name='vedio'
@@ -397,14 +391,14 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                                                                 <div className="image-item">
                                                                     {image?.product_image ? <LazyLoadImage
                                                                         alt="_blank"
-                                                                        src={`${process.env.REACT_APP_BASE_URL}/upload/products/${image?.product_image}`} // use normal <img> attributes as props
+                                                                        src={`${process.env.REACT_APP_BASE_URL}/upload/products/${image?.product_image}`} 
                                                                         effect="blur"
                                                                         style={{ margin: "1rem 0 .5rem 0" }}
                                                                     /> : null}
 
                                                                     {image?.file ? <LazyLoadImage
                                                                         alt="_blank"
-                                                                        src={image['data_url']} // use normal <img> attributes as props
+                                                                        src={image['data_url']}
                                                                         effect="blur"
                                                                         style={{ margin: "1rem 0 .5rem 0" }}
                                                                     /> : null}
@@ -436,21 +430,21 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                             </Grid>
                             <Grid item xs={6}>
                                 <label htmlFor="name">Name</label>
-                                <input type='text' id='name' placeholder='Name' name='name' onChange={handleChange} value={values.name} onBlur={handleBlur} />
+                                <input type='text' id='name' placeholder='Name' name='name' onChange={handleChange} value={values.name || ''} onBlur={handleBlur} />
                             </Grid>
 
                             <Grid item xs={6}>
                                 <label htmlFor="name">Part number</label>
-                                <input type='text' id='part_number' placeholder='Part number' name='part_no' onChange={handleChange} value={values.part_no} onBlur={handleBlur} />
+                                <input type='text' id='part_number' placeholder='Part number' name='part_no' onChange={handleChange} value={values.part_no || ''} onBlur={handleBlur} />
                             </Grid>
 
                             <Grid item xs={6}>
                                 <label htmlFor="price">Price</label>
-                                <input type='number' name='price' placeholder='Price' id='price' onChange={handleChange} value={values.price} onBlur={handleBlur} />
+                                <input type='number' name='price' placeholder='Price' id='price' onChange={handleChange} value={values.price || ''} onBlur={handleBlur} />
                             </Grid>
                             <Grid item xs={6}>
                                 <label htmlFor="b2b_price">B2B Price</label>
-                                <input type='number' name='b2b_price' placeholder='B2B Price' id='b2b_price' onChange={handleChange} value={values.b2b_price} onBlur={handleBlur} />
+                                <input type='number' name='b2b_price' placeholder='B2B Price' id='b2b_price' onChange={handleChange} value={values.b2b_price || ''} onBlur={handleBlur} />
                             </Grid>
 
                             <Grid item xs={6}>
@@ -476,7 +470,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                                                             type="text"
                                                             placeholder='Item Count'
                                                             required
-                                                            value={pair.item_count}
+                                                            value={pair.item_count || ''}
                                                             onChange={(e) => handleInputChange(pair.id, 'item_count', e.target.value)}
                                                         />
                                                     </Grid>
@@ -484,7 +478,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                                                         <input
                                                             type="text"
                                                             placeholder='Bulk Discount'
-                                                            value={pair.bulk_discount}
+                                                            value={pair.bulk_discount || ''}
                                                             onChange={(e) => handleInputChange(pair.id, 'bulk_discount', e.target.value)}
                                                         />
                                                     </Grid>
@@ -511,7 +505,6 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                                                     }
                                                 }}
                                                 onClick={handleAddFields}
-                                                // onClick={handleCloseModal}
                                                 className="btn_main2"
                                             >
                                                 Create A new Feild
@@ -529,9 +522,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                                             >
                                                 Close
                                             </Button>
-                                            <Button variant="contained" className="btn_main" type="submit" onClick={handleCloseModal}
-                                            // endIcon={<SendIcon />}
-                                            >
+                                            <Button variant="contained" className="btn_main" type="submit" onClick={handleCloseModal}>
                                                 Submit
                                             </Button>
                                         </div>
@@ -541,12 +532,12 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
 
                             <Grid item xs={6}>
                                 <label htmlFor="anyDiscount">Any Discount? (Optional)</label>
-                                <input type='number' placeholder='Any Discount' name='any_discount' id='anyDiscount' onChange={handleChange} value={values.any_discount} onBlur={handleBlur} />
+                                <input type='number' placeholder='Any Discount' name='any_discount' id='anyDiscount' onChange={handleChange} value={values.any_discount || ''} onBlur={handleBlur} />
                             </Grid>
 
                             <Grid item xs={6}>
                                 <label htmlFor="chooseCategory">Choose Brand</label>
-                                <CustomSelect name='brand_id' value={values.brand_id} sx={{ fontSize: "1.3rem" }} id='brand_id' onBlur={handleBlur} onChange={handleChange} fullWidth >
+                                <CustomSelect name='brand_id' value={values.brand_id || ''} sx={{ fontSize: "1.3rem" }} id='brand_id' onBlur={handleBlur} onChange={handleChange} fullWidth >
                                     <CustomMenuItem sx={{ fontSize: "1.5rem" }} >---/Select/---</CustomMenuItem>
                                     {sparePart?.map((data, index) => {
                                         return (
@@ -564,7 +555,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                                         labelId="demo-multiple-checkbox-label"
                                         id="demo-multiple-checkbox"
                                         multiple
-                                        value={segmentName}
+                                        value={segmentName || []}
                                         onChange={handleNameGet}
                                         input={<OutlinedInput label="Vehicle-segment" />}
                                         renderValue={(selected) => selected.join(', ')}
@@ -591,25 +582,25 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <label htmlFor="stockCount">Item Stock Count</label>
-                                <input type='number' placeholder='Item Stock' name='item_stock' id='stockCount' onChange={handleChange} value={values.item_stock} onBlur={handleBlur} />
+                                <input type='number' placeholder='Item Stock' name='item_stock' id='stockCount' onChange={handleChange} value={values.item_stock || ''} onBlur={handleBlur} />
                             </Grid>
 
                             <Grid item xs={6}>
                                 <label htmlFor="sku">SKU ID</label>
-                                <input type='text' name='sku_id' id='sku' onChange={handleChange} placeholder='Sku id' value={values.sku_id} onBlur={handleBlur} />
+                                <input type='text' name='sku_id' id='sku' onChange={handleChange} placeholder='Sku id' value={values.sku_id || ''} onBlur={handleBlur} />
                             </Grid>
 
                             <Grid item xs={6}>
                                 <Grid container spacing={1}>
                                     <Grid item xs={7}>
                                         <label htmlFor="delieveryWeight">Product Unit</label>
-                                        <input type='number' name='weight' id='delieveryWeight' placeholder='Product Unit' onChange={handleChange} value={values.weight} onBlur={handleBlur} />
+                                        <input type='number' name='weight' id='delieveryWeight' placeholder='Product Unit' onChange={handleChange} value={values.weight || ''} onBlur={handleBlur} />
                                     </Grid>
                                     <Grid item xs={1}>
                                         <label htmlFor="delieveryWeight">Unit</label>
                                         <CustomSelect
                                             name="unit"
-                                            value={values.unit}
+                                            value={values.unit || ''}
                                             sx={{ fontSize: "1.3rem", padding: "0", width: "100px" }}
                                             onBlur={handleBlur}
                                             onChange={handleChange}  >
@@ -624,7 +615,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
 
                             <Grid item xs={6}>
                                 <label htmlFor="min_qua">Minimum Quantity</label>
-                                <input type='number' name='min_qty' id='min_qua' onChange={handleChange} placeholder='Minimum Quantity' value={values.min_qty} onBlur={handleBlur} />
+                                <input type='number' name='min_qty' id='min_qua' onChange={handleChange} placeholder='Minimum Quantity' value={values.min_qty || ''} onBlur={handleBlur} />
                             </Grid>
 
 
@@ -641,7 +632,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                         <Grid container spacing={1}>
                             <Grid item xs={6}>
                                 <label htmlFor="points">Points</label>
-                                <input type='text' name='point' placeholder='Points' id='points' onChange={handleChange} value={values.point} onBlur={handleBlur} />
+                                <input type='text' name='point' placeholder='Points' id='points' onChange={handleChange} value={values.point || ''} onBlur={handleBlur} />
                             </Grid>
                         </Grid>
 
@@ -655,7 +646,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <label htmlFor="taxRate">Tax Rate(%)</label>
-                                <CustomSelect name='tax_rate' value={values.tax_rate} id='taxRate' onBlur={handleBlur} onChange={handleChange} fullWidth >
+                                <CustomSelect name='tax_rate' value={values.tax_rate || ''} id='taxRate' onBlur={handleBlur} onChange={handleChange} fullWidth >
                                     <CustomMenuItem value={0} disabled sx={{ fontSize: "1.6rem" }}>---/Select/---</CustomMenuItem>
                                     {gst?.map((data, index) => {
                                         return (
@@ -668,7 +659,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
 
                             <Grid item xs={6}>
                                 <label htmlFor="hsn">hsn Code</label>
-                                <input type='text' name='hsn_code' placeholder='Hsn Code' id='hsn' onChange={handleChange} value={values.hsn_code} onBlur={handleBlur} />
+                                <input type='text' name='hsn_code' placeholder='Hsn Code' id='hsn' onChange={handleChange} value={values.hsn_code || ''} onBlur={handleBlur} />
                             </Grid>
                         </Grid>
                         <br />
@@ -681,7 +672,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <label htmlFor="return_period">Return period in days</label>
-                                <input type='number' placeholder='Return period in Days' name='return_days' id='return_period' onChange={handleChange} onBlur={handleBlur} value={values.return_days} disabled={checkboxHandle} style={checkboxHandle ? { backgroundColor: "#80808054" } : null} />
+                                <input type='number' placeholder='Return period in Days' name='return_days' id='return_period' onChange={handleChange} onBlur={handleBlur} value={values.return_days || ''} disabled={checkboxHandle} style={checkboxHandle ? { backgroundColor: "#80808054" } : null} />
 
                                 <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
                                     <CustomCheckbox onClick={handleConditionChange} sx={{ padding: 0 }} id='checkBox' />
@@ -696,7 +687,7 @@ export const CreateProduct = ({ reload, setReload, editModalOpen, editModalClose
                                     name="return_policy"
                                     id="policy"
                                     onChange={handleChange}
-                                    value={values.return_policy}
+                                    value={values.return_policy || ''}
                                     placeholder='Write Return Policy...................................'
                                     onBlur={handleBlur}
                                 />

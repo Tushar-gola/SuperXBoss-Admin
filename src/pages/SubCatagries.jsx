@@ -123,7 +123,7 @@ export const SubCategories = () => {
         try {
             SubCatagriesRetreive();
         } catch (e) {
-            console.log(e.message, "Sub catagory page");
+            console.error(e.message, "Sub catagory page");
         }
     }, [rowsPerPage, page, id])
 

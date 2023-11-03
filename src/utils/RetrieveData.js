@@ -8,7 +8,6 @@ export const RetrieveData = async (options) => {
     return await axios({
         ...options, headers: { "Content-Type": "multipart/form-data", Authorization: brToken }
     }).then((responses) => {
-        console.log(responses.message);
         return responses?.data
     }).catch((error) => {
         if (error?.response?.status === 401) {
@@ -20,7 +19,7 @@ export const RetrieveData = async (options) => {
             enqueueSnackbar(error.message, { variant: "error" })
         }
 
-        console.log(error.message, "hhhhhhhhhhhhhhhhhhhhhhhhhh")
+        console.error(error.message, "hhhhhhhhhhhhhhhhhhhhhhhhhh")
         return error
     });
 }

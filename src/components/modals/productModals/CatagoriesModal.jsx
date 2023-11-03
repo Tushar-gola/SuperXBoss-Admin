@@ -157,8 +157,8 @@ export const CatagoriesModal = ({ modalOpen, modalClose }) => {
         return null;
     };
 
-    console.log([...new Set(checkedIds)])
-    console.log(checkedIds, "checkedIds");
+    // console.log([...new Set(checkedIds)])
+    // console.log(checkedIds, "checkedIds");
 
 
     return (

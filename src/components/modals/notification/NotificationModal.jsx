@@ -56,7 +56,6 @@ export const NotificationModal = () => {
                     method: "post",
                     data: formData,
                 },{ "Content-Type": "multipart/form-data" });
-                console.log(data);
             },
         });
     return (

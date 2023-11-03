@@ -128,7 +128,7 @@ export const Vechiles = () => {
         try {
             vehicleRetrieve()
         } catch (e) {
-            console.log(e.messgae, "Vechile Page");
+            console.error(e.messgae, "Vechile Page");
         }
     }, [page, rowsPerPage])
 

@@ -49,7 +49,6 @@ export const ShippingModal = ({ reload, setReload, editData, modalOpen, modalClo
             charge: "",
         },
         onSubmit: async (values) => {
-            console.log(values);
             let AxiosFetch;
             dispatch(openLoader(true));
 
@@ -75,7 +74,6 @@ export const ShippingModal = ({ reload, setReload, editData, modalOpen, modalClo
                     dispatch(openLoader(false));
                     values.state = ""
                     values.charge = ""
-                    console.log("hhhhhhhhhhhhhhhhhhhhhh");
                     handleClose()
                     setReload(!reload)
                 }
