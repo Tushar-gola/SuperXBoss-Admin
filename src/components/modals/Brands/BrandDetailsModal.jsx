@@ -55,8 +55,6 @@ export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandDat
             label: "Vehicle + Spare Parts"
         }
     ];
-
-
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false)
@@ -113,7 +111,6 @@ export const BrandDetailsModal = ({ brandEditData, setBrandEditData, setBrandDat
             url: `${process.env.REACT_APP_BASE_URL}/api/retrieve/vehicle-segment-type`,
         });
         setVehicleSegments(data)
-        console.log(data);
     }
     const handleNameGet = (event) => {
         const {
